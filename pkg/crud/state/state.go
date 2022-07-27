@@ -20,7 +20,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func Create(ctx context.Context, in *npool.StateReq) (*ent.State, error) { //nolint
+func Create(ctx context.Context, in *npool.StateReq) (*ent.State, error) {
 	var info *ent.State
 	var err error
 
@@ -59,7 +59,7 @@ func Create(ctx context.Context, in *npool.StateReq) (*ent.State, error) { //nol
 	return info, nil
 }
 
-func CreateBulk(ctx context.Context, in []*npool.StateReq) ([]*ent.State, error) { //nolint
+func CreateBulk(ctx context.Context, in []*npool.StateReq) ([]*ent.State, error) {
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CreateBulk")
@@ -125,7 +125,7 @@ func Row(ctx context.Context, id uuid.UUID) (*ent.State, error) {
 	return info, nil
 }
 
-func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.StateQuery, error) { //nolint
+func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.StateQuery, error) {
 	stm := cli.State.Query()
 	if conds.ID != nil {
 		switch conds.GetID().GetOp() {
