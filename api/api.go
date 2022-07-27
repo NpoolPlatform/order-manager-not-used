@@ -3,7 +3,7 @@ package api
 import (
 	"context"
 
-	"github.com/NpoolPlatform/message/npool/ordermgr"
+	ordermgr "github.com/NpoolPlatform/message/npool/order/mgr/v1"
 
 	"github.com/NpoolPlatform/order-manager/api/state"
 

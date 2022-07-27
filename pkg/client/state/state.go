@@ -9,7 +9,7 @@ import (
 	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
 
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	npool "github.com/NpoolPlatform/message/npool/ordermgr/state"
+	npool "github.com/NpoolPlatform/message/npool/order/mgr/v1/state"
 
 	constant "github.com/NpoolPlatform/order-manager/pkg/message/const"
 )

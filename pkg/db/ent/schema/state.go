@@ -6,7 +6,7 @@ import (
 	"github.com/NpoolPlatform/order-manager/pkg/db/mixin"
 	"github.com/google/uuid"
 
-	"github.com/NpoolPlatform/message/npool/ordermgr/state"
+	"github.com/NpoolPlatform/message/npool/order/mgr/v1/state"
 )
 
 // State holds the schema definition for the State entity.

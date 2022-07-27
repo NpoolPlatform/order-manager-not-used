@@ -12,7 +12,7 @@ import (
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 
 	valuedef "github.com/NpoolPlatform/message/npool"
-	npool "github.com/NpoolPlatform/message/npool/ordermgr/state"
+	npool "github.com/NpoolPlatform/message/npool/order/mgr/v1/state"
 	testinit "github.com/NpoolPlatform/order-manager/pkg/testinit"
 	"github.com/google/uuid"
 

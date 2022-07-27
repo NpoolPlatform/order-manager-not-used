@@ -1,7 +1,7 @@
 package state
 
 import (
-	"github.com/NpoolPlatform/message/npool/ordermgr/state"
+	"github.com/NpoolPlatform/message/npool/order/mgr/v1/state"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
