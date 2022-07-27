@@ -66,6 +66,22 @@ func CreateStates(ctx context.Context, in []*npool.StateReq) ([]*npool.State, er
 	return infos.([]*npool.State), nil
 }
 
+func UpdateState(ctx context.Context, in *npool.StateReq) (*npool.State, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.OrderStateClient) (cruder.Any, error) {
+		resp, err := cli.UpdateState(ctx, &npool.UpdateStateRequest{
+			Info: in,
+		})
+		if err != nil {
+			return nil, fmt.Errorf("fail update state: %v", err)
+		}
+		return resp.GetInfo(), nil
+	})
+	if err != nil {
+		return nil, fmt.Errorf("fail update state: %v", err)
+	}
+	return info.(*npool.State), nil
+}
+
 func GetState(ctx context.Context, id string) (*npool.State, error) {
 	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.OrderStateClient) (cruder.Any, error) {
 		resp, err := cli.GetState(ctx, &npool.GetStateRequest{
