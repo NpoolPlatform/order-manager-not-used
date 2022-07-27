@@ -10,7 +10,7 @@ import (
 	npool "github.com/NpoolPlatform/message/npool/ordermgr/state"
 )
 
-func validate(info *npool.StateReq) error { //nolint
+func validate(info *npool.StateReq) error {
 	if info.OrderID == nil {
 		logger.Sugar().Errorw("validate", "OrderID", info.OrderID)
 		return status.Error(codes.InvalidArgument, "OrderID is empty")
