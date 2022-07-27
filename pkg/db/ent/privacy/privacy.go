@@ -6,7 +6,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/NpoolPlatform/service-template/pkg/db/ent"
+	"github.com/NpoolPlatform/order-manager/pkg/db/ent"
 
 	"entgo.io/ent/entql"
 	"entgo.io/ent/privacy"
@@ -165,52 +165,28 @@ func DenyMutationOperationRule(op ent.Op) MutationRule {
 	return OnMutationOperation(rule, op)
 }
 
-// The DetailQueryRuleFunc type is an adapter to allow the use of ordinary
+// The StateQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
-type DetailQueryRuleFunc func(context.Context, *ent.DetailQuery) error
+type StateQueryRuleFunc func(context.Context, *ent.StateQuery) error
 
 // EvalQuery return f(ctx, q).
-func (f DetailQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
-	if q, ok := q.(*ent.DetailQuery); ok {
+func (f StateQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.StateQuery); ok {
 		return f(ctx, q)
 	}
-	return Denyf("ent/privacy: unexpected query type %T, expect *ent.DetailQuery", q)
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.StateQuery", q)
 }
 
-// The DetailMutationRuleFunc type is an adapter to allow the use of ordinary
+// The StateMutationRuleFunc type is an adapter to allow the use of ordinary
 // functions as a mutation rule.
-type DetailMutationRuleFunc func(context.Context, *ent.DetailMutation) error
+type StateMutationRuleFunc func(context.Context, *ent.StateMutation) error
 
 // EvalMutation calls f(ctx, m).
-func (f DetailMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
-	if m, ok := m.(*ent.DetailMutation); ok {
+func (f StateMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.StateMutation); ok {
 		return f(ctx, m)
 	}
-	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.DetailMutation", m)
-}
-
-// The GeneralQueryRuleFunc type is an adapter to allow the use of ordinary
-// functions as a query rule.
-type GeneralQueryRuleFunc func(context.Context, *ent.GeneralQuery) error
-
-// EvalQuery return f(ctx, q).
-func (f GeneralQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
-	if q, ok := q.(*ent.GeneralQuery); ok {
-		return f(ctx, q)
-	}
-	return Denyf("ent/privacy: unexpected query type %T, expect *ent.GeneralQuery", q)
-}
-
-// The GeneralMutationRuleFunc type is an adapter to allow the use of ordinary
-// functions as a mutation rule.
-type GeneralMutationRuleFunc func(context.Context, *ent.GeneralMutation) error
-
-// EvalMutation calls f(ctx, m).
-func (f GeneralMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
-	if m, ok := m.(*ent.GeneralMutation); ok {
-		return f(ctx, m)
-	}
-	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.GeneralMutation", m)
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.StateMutation", m)
 }
 
 type (
@@ -248,9 +224,7 @@ var _ QueryMutationRule = FilterFunc(nil)
 
 func queryFilter(q ent.Query) (Filter, error) {
 	switch q := q.(type) {
-	case *ent.DetailQuery:
-		return q.Filter(), nil
-	case *ent.GeneralQuery:
+	case *ent.StateQuery:
 		return q.Filter(), nil
 	default:
 		return nil, Denyf("ent/privacy: unexpected query type %T for query filter", q)
@@ -259,9 +233,7 @@ func queryFilter(q ent.Query) (Filter, error) {
 
 func mutationFilter(m ent.Mutation) (Filter, error) {
 	switch m := m.(type) {
-	case *ent.DetailMutation:
-		return m.Filter(), nil
-	case *ent.GeneralMutation:
+	case *ent.StateMutation:
 		return m.Filter(), nil
 	default:
 		return nil, Denyf("ent/privacy: unexpected mutation type %T for mutation filter", m)

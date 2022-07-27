@@ -2,4 +2,4 @@
 
 package ent
 
-// The schema-stitching logic is generated in github.com/NpoolPlatform/service-template/pkg/db/ent/runtime/runtime.go
+// The schema-stitching logic is generated in github.com/NpoolPlatform/order-manager/pkg/db/ent/runtime/runtime.go
