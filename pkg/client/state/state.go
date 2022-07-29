@@ -9,14 +9,14 @@ import (
 	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
 
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	npool "github.com/NpoolPlatform/message/npool/order/mgr/v1/state"
+	npool "github.com/NpoolPlatform/message/npool/order/mgr/v1/order/state"
 
 	constant "github.com/NpoolPlatform/order-manager/pkg/message/const"
 )
 
 var timeout = 10 * time.Second
 
-type handler func(context.Context, npool.OrderStateClient) (cruder.Any, error)
+type handler func(context.Context, npool.ManagerClient) (cruder.Any, error)
 
 func withCRUD(ctx context.Context, handler handler) (cruder.Any, error) {
 	_ctx, cancel := context.WithTimeout(ctx, timeout)
@@ -29,13 +29,13 @@ func withCRUD(ctx context.Context, handler handler) (cruder.Any, error) {
 
 	defer conn.Close()
 
-	cli := npool.NewOrderStateClient(conn)
+	cli := npool.NewManagerClient(conn)
 
 	return handler(_ctx, cli)
 }
 
 func CreateState(ctx context.Context, in *npool.StateReq) (*npool.State, error) {
-	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.OrderStateClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.CreateState(ctx, &npool.CreateStateRequest{
 			Info: in,
 		})
@@ -51,7 +51,7 @@ func CreateState(ctx context.Context, in *npool.StateReq) (*npool.State, error) 
 }
 
 func CreateStates(ctx context.Context, in []*npool.StateReq) ([]*npool.State, error) {
-	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.OrderStateClient) (cruder.Any, error) {
+	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.CreateStates(ctx, &npool.CreateStatesRequest{
 			Infos: in,
 		})
@@ -67,7 +67,7 @@ func CreateStates(ctx context.Context, in []*npool.StateReq) ([]*npool.State, er
 }
 
 func UpdateState(ctx context.Context, in *npool.StateReq) (*npool.State, error) {
-	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.OrderStateClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.UpdateState(ctx, &npool.UpdateStateRequest{
 			Info: in,
 		})
@@ -83,7 +83,7 @@ func UpdateState(ctx context.Context, in *npool.StateReq) (*npool.State, error) 
 }
 
 func GetState(ctx context.Context, id string) (*npool.State, error) {
-	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.OrderStateClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.GetState(ctx, &npool.GetStateRequest{
 			ID: id,
 		})
@@ -99,7 +99,7 @@ func GetState(ctx context.Context, id string) (*npool.State, error) {
 }
 
 func GetStateOnly(ctx context.Context, conds *npool.Conds) (*npool.State, error) {
-	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.OrderStateClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.GetStateOnly(ctx, &npool.GetStateOnlyRequest{
 			Conds: conds,
 		})
@@ -116,7 +116,7 @@ func GetStateOnly(ctx context.Context, conds *npool.Conds) (*npool.State, error)
 
 func GetStates(ctx context.Context, conds *npool.Conds, limit, offset int32) ([]*npool.State, uint32, error) {
 	var total uint32
-	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.OrderStateClient) (cruder.Any, error) {
+	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.GetStates(ctx, &npool.GetStatesRequest{
 			Conds:  conds,
 			Limit:  limit,
@@ -135,7 +135,7 @@ func GetStates(ctx context.Context, conds *npool.Conds, limit, offset int32) ([]
 }
 
 func ExistState(ctx context.Context, id string) (bool, error) {
-	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.OrderStateClient) (cruder.Any, error) {
+	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.ExistState(ctx, &npool.ExistStateRequest{
 			ID: id,
 		})
@@ -151,7 +151,7 @@ func ExistState(ctx context.Context, id string) (bool, error) {
 }
 
 func ExistStateConds(ctx context.Context, conds *npool.Conds) (bool, error) {
-	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.OrderStateClient) (cruder.Any, error) {
+	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.ExistStateConds(ctx, &npool.ExistStateCondsRequest{
 			Conds: conds,
 		})
@@ -167,7 +167,7 @@ func ExistStateConds(ctx context.Context, conds *npool.Conds) (bool, error) {
 }
 
 func CountStates(ctx context.Context, conds *npool.Conds) (uint32, error) {
-	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.OrderStateClient) (cruder.Any, error) {
+	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
 		resp, err := cli.CountStates(ctx, &npool.CountStatesRequest{
 			Conds: conds,
 		})

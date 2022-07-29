@@ -1,7 +1,7 @@
 package state
 
 import (
-	npool "github.com/NpoolPlatform/message/npool/order/mgr/v1/state"
+	npool "github.com/NpoolPlatform/message/npool/order/mgr/v1/order/state"
 	"github.com/NpoolPlatform/order-manager/pkg/db/ent"
 )
 

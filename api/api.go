@@ -3,7 +3,7 @@ package api
 import (
 	"context"
 
-	ordermgr "github.com/NpoolPlatform/message/npool/order/mgr/v1"
+	ordermgr "github.com/NpoolPlatform/message/npool/order/mgr/v1/order"
 
 	"github.com/NpoolPlatform/order-manager/api/state"
 
@@ -12,16 +12,16 @@ import (
 )
 
 type Server struct {
-	ordermgr.UnimplementedOrderManagerServer
+	ordermgr.UnimplementedManagerServer
 }
 
 func Register(server grpc.ServiceRegistrar) {
-	ordermgr.RegisterOrderManagerServer(server, &Server{})
+	ordermgr.RegisterManagerServer(server, &Server{})
 	state.Register(server)
 }
 
 func RegisterGateway(mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) error {
-	if err := ordermgr.RegisterOrderManagerHandlerFromEndpoint(context.Background(), mux, endpoint, opts); err != nil {
+	if err := ordermgr.RegisterManagerHandlerFromEndpoint(context.Background(), mux, endpoint, opts); err != nil {
 		return err
 	}
 	if err := state.RegisterGateway(mux, endpoint, opts); err != nil {

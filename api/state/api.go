@@ -1,18 +1,18 @@
 package state
 
 import (
-	"github.com/NpoolPlatform/message/npool/order/mgr/v1/state"
+	"github.com/NpoolPlatform/message/npool/order/mgr/v1/order/state"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
 )
 
 type Server struct {
-	state.UnimplementedOrderStateServer
+	state.UnimplementedManagerServer
 }
 
 func Register(server grpc.ServiceRegistrar) {
-	state.RegisterOrderStateServer(server, &Server{})
+	state.RegisterManagerServer(server, &Server{})
 }
 
 func RegisterGateway(mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) error {

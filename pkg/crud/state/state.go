@@ -12,7 +12,7 @@ import (
 	"go.opentelemetry.io/otel/codes"
 
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	npool "github.com/NpoolPlatform/message/npool/order/mgr/v1/state"
+	npool "github.com/NpoolPlatform/message/npool/order/mgr/v1/order/state"
 	"github.com/NpoolPlatform/order-manager/pkg/db"
 	"github.com/NpoolPlatform/order-manager/pkg/db/ent"
 	"github.com/NpoolPlatform/order-manager/pkg/db/ent/state"
