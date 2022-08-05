@@ -219,6 +219,9 @@ func RowOnly(ctx context.Context, conds *npool.Conds) (*ent.State, error) {
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		stm, err := setQueryConds(conds, cli)
 		if err != nil {
+			if ent.IsNotFound(err) {
+				return nil
+			}
 			return err
 		}
 
