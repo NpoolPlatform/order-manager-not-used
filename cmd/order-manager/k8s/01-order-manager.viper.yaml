@@ -12,6 +12,6 @@ data:
       healthz_port: 50362
       prometheus_port: 50363
       appid: "89089012783789789719823798127398"
-      serviceid: "6161ecc0-0b2c-11ed-b571-72e9de4b20f6"
+      serviceid: "c99ee190-125b-11ed-beea-cbe98349367d"
       logdir: "./"
       apolloAccessKey: "0147fb70b815403790e8634b899fac07"
