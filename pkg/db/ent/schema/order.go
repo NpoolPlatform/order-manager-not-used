@@ -72,7 +72,7 @@ func (Order) Fields() []ent.Field {
 			Optional().
 			Default(0),
 		field.
-			UUID("coupon_id", uuid.UUID{}).
+			UUID("fix_amount_coupon_id", uuid.UUID{}).
 			Optional().
 			Default(func() uuid.UUID {
 				return uuid.UUID{}

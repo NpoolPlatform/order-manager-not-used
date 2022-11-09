@@ -62,7 +62,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			order.FieldUserSpecialReductionID: {Type: field.TypeUUID, Column: order.FieldUserSpecialReductionID},
 			order.FieldStartAt:                {Type: field.TypeUint32, Column: order.FieldStartAt},
 			order.FieldEndAt:                  {Type: field.TypeUint32, Column: order.FieldEndAt},
-			order.FieldCouponID:               {Type: field.TypeUUID, Column: order.FieldCouponID},
+			order.FieldFixAmountCouponID:      {Type: field.TypeUUID, Column: order.FieldFixAmountCouponID},
 			order.FieldType:                   {Type: field.TypeString, Column: order.FieldType},
 			order.FieldState:                  {Type: field.TypeString, Column: order.FieldState},
 		},
@@ -314,9 +314,9 @@ func (f *OrderFilter) WhereEndAt(p entql.Uint32P) {
 	f.Where(p.Field(order.FieldEndAt))
 }
 
-// WhereCouponID applies the entql [16]byte predicate on the coupon_id field.
-func (f *OrderFilter) WhereCouponID(p entql.ValueP) {
-	f.Where(p.Field(order.FieldCouponID))
+// WhereFixAmountCouponID applies the entql [16]byte predicate on the fix_amount_coupon_id field.
+func (f *OrderFilter) WhereFixAmountCouponID(p entql.ValueP) {
+	f.Where(p.Field(order.FieldFixAmountCouponID))
 }
 
 // WhereType applies the entql string predicate on the type field.

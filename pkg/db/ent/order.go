@@ -44,8 +44,8 @@ type Order struct {
 	StartAt uint32 `json:"start_at,omitempty"`
 	// EndAt holds the value of the "end_at" field.
 	EndAt uint32 `json:"end_at,omitempty"`
-	// CouponID holds the value of the "coupon_id" field.
-	CouponID uuid.UUID `json:"coupon_id,omitempty"`
+	// FixAmountCouponID holds the value of the "fix_amount_coupon_id" field.
+	FixAmountCouponID uuid.UUID `json:"fix_amount_coupon_id,omitempty"`
 	// Type holds the value of the "type" field.
 	Type string `json:"type,omitempty"`
 	// State holds the value of the "state" field.
@@ -63,7 +63,7 @@ func (*Order) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new(sql.NullInt64)
 		case order.FieldType, order.FieldState:
 			values[i] = new(sql.NullString)
-		case order.FieldID, order.FieldGoodID, order.FieldAppID, order.FieldUserID, order.FieldParentOrderID, order.FieldPromotionID, order.FieldDiscountCouponID, order.FieldUserSpecialReductionID, order.FieldCouponID:
+		case order.FieldID, order.FieldGoodID, order.FieldAppID, order.FieldUserID, order.FieldParentOrderID, order.FieldPromotionID, order.FieldDiscountCouponID, order.FieldUserSpecialReductionID, order.FieldFixAmountCouponID:
 			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type Order", columns[i])
@@ -170,11 +170,11 @@ func (o *Order) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				o.EndAt = uint32(value.Int64)
 			}
-		case order.FieldCouponID:
+		case order.FieldFixAmountCouponID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
-				return fmt.Errorf("unexpected type %T for field coupon_id", values[i])
+				return fmt.Errorf("unexpected type %T for field fix_amount_coupon_id", values[i])
 			} else if value != nil {
-				o.CouponID = *value
+				o.FixAmountCouponID = *value
 			}
 		case order.FieldType:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -258,8 +258,8 @@ func (o *Order) String() string {
 	builder.WriteString("end_at=")
 	builder.WriteString(fmt.Sprintf("%v", o.EndAt))
 	builder.WriteString(", ")
-	builder.WriteString("coupon_id=")
-	builder.WriteString(fmt.Sprintf("%v", o.CouponID))
+	builder.WriteString("fix_amount_coupon_id=")
+	builder.WriteString(fmt.Sprintf("%v", o.FixAmountCouponID))
 	builder.WriteString(", ")
 	builder.WriteString("type=")
 	builder.WriteString(o.Type)

@@ -177,10 +177,10 @@ func EndAt(v uint32) predicate.Order {
 	})
 }
 
-// CouponID applies equality check predicate on the "coupon_id" field. It's identical to CouponIDEQ.
-func CouponID(v uuid.UUID) predicate.Order {
+// FixAmountCouponID applies equality check predicate on the "fix_amount_coupon_id" field. It's identical to FixAmountCouponIDEQ.
+func FixAmountCouponID(v uuid.UUID) predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldCouponID), v))
+		s.Where(sql.EQ(s.C(FieldFixAmountCouponID), v))
 	})
 }
 
@@ -1142,81 +1142,81 @@ func EndAtNotNil() predicate.Order {
 	})
 }
 
-// CouponIDEQ applies the EQ predicate on the "coupon_id" field.
-func CouponIDEQ(v uuid.UUID) predicate.Order {
+// FixAmountCouponIDEQ applies the EQ predicate on the "fix_amount_coupon_id" field.
+func FixAmountCouponIDEQ(v uuid.UUID) predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldCouponID), v))
+		s.Where(sql.EQ(s.C(FieldFixAmountCouponID), v))
 	})
 }
 
-// CouponIDNEQ applies the NEQ predicate on the "coupon_id" field.
-func CouponIDNEQ(v uuid.UUID) predicate.Order {
+// FixAmountCouponIDNEQ applies the NEQ predicate on the "fix_amount_coupon_id" field.
+func FixAmountCouponIDNEQ(v uuid.UUID) predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldCouponID), v))
+		s.Where(sql.NEQ(s.C(FieldFixAmountCouponID), v))
 	})
 }
 
-// CouponIDIn applies the In predicate on the "coupon_id" field.
-func CouponIDIn(vs ...uuid.UUID) predicate.Order {
+// FixAmountCouponIDIn applies the In predicate on the "fix_amount_coupon_id" field.
+func FixAmountCouponIDIn(vs ...uuid.UUID) predicate.Order {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.Order(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldCouponID), v...))
+		s.Where(sql.In(s.C(FieldFixAmountCouponID), v...))
 	})
 }
 
-// CouponIDNotIn applies the NotIn predicate on the "coupon_id" field.
-func CouponIDNotIn(vs ...uuid.UUID) predicate.Order {
+// FixAmountCouponIDNotIn applies the NotIn predicate on the "fix_amount_coupon_id" field.
+func FixAmountCouponIDNotIn(vs ...uuid.UUID) predicate.Order {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.Order(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldCouponID), v...))
+		s.Where(sql.NotIn(s.C(FieldFixAmountCouponID), v...))
 	})
 }
 
-// CouponIDGT applies the GT predicate on the "coupon_id" field.
-func CouponIDGT(v uuid.UUID) predicate.Order {
+// FixAmountCouponIDGT applies the GT predicate on the "fix_amount_coupon_id" field.
+func FixAmountCouponIDGT(v uuid.UUID) predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldCouponID), v))
+		s.Where(sql.GT(s.C(FieldFixAmountCouponID), v))
 	})
 }
 
-// CouponIDGTE applies the GTE predicate on the "coupon_id" field.
-func CouponIDGTE(v uuid.UUID) predicate.Order {
+// FixAmountCouponIDGTE applies the GTE predicate on the "fix_amount_coupon_id" field.
+func FixAmountCouponIDGTE(v uuid.UUID) predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldCouponID), v))
+		s.Where(sql.GTE(s.C(FieldFixAmountCouponID), v))
 	})
 }
 
-// CouponIDLT applies the LT predicate on the "coupon_id" field.
-func CouponIDLT(v uuid.UUID) predicate.Order {
+// FixAmountCouponIDLT applies the LT predicate on the "fix_amount_coupon_id" field.
+func FixAmountCouponIDLT(v uuid.UUID) predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldCouponID), v))
+		s.Where(sql.LT(s.C(FieldFixAmountCouponID), v))
 	})
 }
 
-// CouponIDLTE applies the LTE predicate on the "coupon_id" field.
-func CouponIDLTE(v uuid.UUID) predicate.Order {
+// FixAmountCouponIDLTE applies the LTE predicate on the "fix_amount_coupon_id" field.
+func FixAmountCouponIDLTE(v uuid.UUID) predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldCouponID), v))
+		s.Where(sql.LTE(s.C(FieldFixAmountCouponID), v))
 	})
 }
 
-// CouponIDIsNil applies the IsNil predicate on the "coupon_id" field.
-func CouponIDIsNil() predicate.Order {
+// FixAmountCouponIDIsNil applies the IsNil predicate on the "fix_amount_coupon_id" field.
+func FixAmountCouponIDIsNil() predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldCouponID)))
+		s.Where(sql.IsNull(s.C(FieldFixAmountCouponID)))
 	})
 }
 
-// CouponIDNotNil applies the NotNil predicate on the "coupon_id" field.
-func CouponIDNotNil() predicate.Order {
+// FixAmountCouponIDNotNil applies the NotNil predicate on the "fix_amount_coupon_id" field.
+func FixAmountCouponIDNotNil() predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldCouponID)))
+		s.Where(sql.NotNull(s.C(FieldFixAmountCouponID)))
 	})
 }
 

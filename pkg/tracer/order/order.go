@@ -22,7 +22,7 @@ func trace(span trace1.Span, in *npool.OrderReq, index int) trace1.Span {
 		attribute.String(fmt.Sprintf("DiscountCouponID.%v", index), in.GetDiscountCouponID()),
 		attribute.String(fmt.Sprintf("UserSpecialReductionID.%v", index), in.GetUserSpecialReductionID()),
 		attribute.Int(fmt.Sprintf("StartAt.%v", index), int(in.GetStartAt())),
-		attribute.String(fmt.Sprintf("CouponID.%v", index), in.GetCouponID()),
+		attribute.String(fmt.Sprintf("FixAmountCouponID.%v", index), in.GetFixAmountCouponID()),
 		attribute.String(fmt.Sprintf("Type.%v", index), in.GetType().String()),
 		attribute.String(fmt.Sprintf("State.%v", index), in.GetState().String()),
 		attribute.Int(fmt.Sprintf("CreatedAt.%v", index), int(in.GetCreatedAt())),

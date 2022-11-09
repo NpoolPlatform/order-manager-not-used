@@ -931,7 +931,7 @@ type OrderMutation struct {
 	addstart_at               *int32
 	end_at                    *uint32
 	addend_at                 *int32
-	coupon_id                 *uuid.UUID
+	fix_amount_coupon_id      *uuid.UUID
 	_type                     *string
 	state                     *string
 	clearedFields             map[string]struct{}
@@ -1761,53 +1761,53 @@ func (m *OrderMutation) ResetEndAt() {
 	delete(m.clearedFields, order.FieldEndAt)
 }
 
-// SetCouponID sets the "coupon_id" field.
-func (m *OrderMutation) SetCouponID(u uuid.UUID) {
-	m.coupon_id = &u
+// SetFixAmountCouponID sets the "fix_amount_coupon_id" field.
+func (m *OrderMutation) SetFixAmountCouponID(u uuid.UUID) {
+	m.fix_amount_coupon_id = &u
 }
 
-// CouponID returns the value of the "coupon_id" field in the mutation.
-func (m *OrderMutation) CouponID() (r uuid.UUID, exists bool) {
-	v := m.coupon_id
+// FixAmountCouponID returns the value of the "fix_amount_coupon_id" field in the mutation.
+func (m *OrderMutation) FixAmountCouponID() (r uuid.UUID, exists bool) {
+	v := m.fix_amount_coupon_id
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldCouponID returns the old "coupon_id" field's value of the Order entity.
+// OldFixAmountCouponID returns the old "fix_amount_coupon_id" field's value of the Order entity.
 // If the Order object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *OrderMutation) OldCouponID(ctx context.Context) (v uuid.UUID, err error) {
+func (m *OrderMutation) OldFixAmountCouponID(ctx context.Context) (v uuid.UUID, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldCouponID is only allowed on UpdateOne operations")
+		return v, errors.New("OldFixAmountCouponID is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldCouponID requires an ID field in the mutation")
+		return v, errors.New("OldFixAmountCouponID requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldCouponID: %w", err)
+		return v, fmt.Errorf("querying old value for OldFixAmountCouponID: %w", err)
 	}
-	return oldValue.CouponID, nil
+	return oldValue.FixAmountCouponID, nil
 }
 
-// ClearCouponID clears the value of the "coupon_id" field.
-func (m *OrderMutation) ClearCouponID() {
-	m.coupon_id = nil
-	m.clearedFields[order.FieldCouponID] = struct{}{}
+// ClearFixAmountCouponID clears the value of the "fix_amount_coupon_id" field.
+func (m *OrderMutation) ClearFixAmountCouponID() {
+	m.fix_amount_coupon_id = nil
+	m.clearedFields[order.FieldFixAmountCouponID] = struct{}{}
 }
 
-// CouponIDCleared returns if the "coupon_id" field was cleared in this mutation.
-func (m *OrderMutation) CouponIDCleared() bool {
-	_, ok := m.clearedFields[order.FieldCouponID]
+// FixAmountCouponIDCleared returns if the "fix_amount_coupon_id" field was cleared in this mutation.
+func (m *OrderMutation) FixAmountCouponIDCleared() bool {
+	_, ok := m.clearedFields[order.FieldFixAmountCouponID]
 	return ok
 }
 
-// ResetCouponID resets all changes to the "coupon_id" field.
-func (m *OrderMutation) ResetCouponID() {
-	m.coupon_id = nil
-	delete(m.clearedFields, order.FieldCouponID)
+// ResetFixAmountCouponID resets all changes to the "fix_amount_coupon_id" field.
+func (m *OrderMutation) ResetFixAmountCouponID() {
+	m.fix_amount_coupon_id = nil
+	delete(m.clearedFields, order.FieldFixAmountCouponID)
 }
 
 // SetType sets the "type" field.
@@ -1970,8 +1970,8 @@ func (m *OrderMutation) Fields() []string {
 	if m.end_at != nil {
 		fields = append(fields, order.FieldEndAt)
 	}
-	if m.coupon_id != nil {
-		fields = append(fields, order.FieldCouponID)
+	if m.fix_amount_coupon_id != nil {
+		fields = append(fields, order.FieldFixAmountCouponID)
 	}
 	if m._type != nil {
 		fields = append(fields, order.FieldType)
@@ -2015,8 +2015,8 @@ func (m *OrderMutation) Field(name string) (ent.Value, bool) {
 		return m.StartAt()
 	case order.FieldEndAt:
 		return m.EndAt()
-	case order.FieldCouponID:
-		return m.CouponID()
+	case order.FieldFixAmountCouponID:
+		return m.FixAmountCouponID()
 	case order.FieldType:
 		return m.GetType()
 	case order.FieldState:
@@ -2058,8 +2058,8 @@ func (m *OrderMutation) OldField(ctx context.Context, name string) (ent.Value, e
 		return m.OldStartAt(ctx)
 	case order.FieldEndAt:
 		return m.OldEndAt(ctx)
-	case order.FieldCouponID:
-		return m.OldCouponID(ctx)
+	case order.FieldFixAmountCouponID:
+		return m.OldFixAmountCouponID(ctx)
 	case order.FieldType:
 		return m.OldType(ctx)
 	case order.FieldState:
@@ -2171,12 +2171,12 @@ func (m *OrderMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetEndAt(v)
 		return nil
-	case order.FieldCouponID:
+	case order.FieldFixAmountCouponID:
 		v, ok := value.(uuid.UUID)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetCouponID(v)
+		m.SetFixAmountCouponID(v)
 		return nil
 	case order.FieldType:
 		v, ok := value.(string)
@@ -2318,8 +2318,8 @@ func (m *OrderMutation) ClearedFields() []string {
 	if m.FieldCleared(order.FieldEndAt) {
 		fields = append(fields, order.FieldEndAt)
 	}
-	if m.FieldCleared(order.FieldCouponID) {
-		fields = append(fields, order.FieldCouponID)
+	if m.FieldCleared(order.FieldFixAmountCouponID) {
+		fields = append(fields, order.FieldFixAmountCouponID)
 	}
 	if m.FieldCleared(order.FieldType) {
 		fields = append(fields, order.FieldType)
@@ -2362,8 +2362,8 @@ func (m *OrderMutation) ClearField(name string) error {
 	case order.FieldEndAt:
 		m.ClearEndAt()
 		return nil
-	case order.FieldCouponID:
-		m.ClearCouponID()
+	case order.FieldFixAmountCouponID:
+		m.ClearFixAmountCouponID()
 		return nil
 	case order.FieldType:
 		m.ClearType()
@@ -2421,8 +2421,8 @@ func (m *OrderMutation) ResetField(name string) error {
 	case order.FieldEndAt:
 		m.ResetEndAt()
 		return nil
-	case order.FieldCouponID:
-		m.ResetCouponID()
+	case order.FieldFixAmountCouponID:
+		m.ResetFixAmountCouponID()
 		return nil
 	case order.FieldType:
 		m.ResetType()

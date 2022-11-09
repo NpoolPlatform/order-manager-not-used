@@ -43,7 +43,7 @@ var appGood = ent.Order{
 	UserSpecialReductionID: uuid.New(),
 	StartAt:                uint32(time.Now().Unix()),
 	EndAt:                  uint32(time.Now().Add(100 * time.Hour).Unix()),
-	CouponID:               uuid.New(),
+	FixAmountCouponID:      uuid.New(),
 	Type:                   npool.OrderType_Airdrop.String(),
 	State:                  npool.OrderState_InService.String(),
 }
@@ -57,7 +57,7 @@ var (
 	promotionID            = appGood.PromotionID.String()
 	discountCouponID       = appGood.DiscountCouponID.String()
 	userSpecialReductionID = appGood.UserSpecialReductionID.String()
-	couponID               = appGood.CouponID.String()
+	couponID               = appGood.FixAmountCouponID.String()
 	tp                     = npool.OrderType_Airdrop
 	state                  = npool.OrderState_InService
 	req                    = npool.OrderReq{
@@ -73,7 +73,7 @@ var (
 		UserSpecialReductionID: &userSpecialReductionID,
 		StartAt:                &appGood.StartAt,
 		EndAt:                  &appGood.EndAt,
-		CouponID:               &couponID,
+		FixAmountCouponID:      &couponID,
 		Type:                   &tp,
 		State:                  &state,
 	}
@@ -106,7 +106,7 @@ func createBulk(t *testing.T) {
 			UserSpecialReductionID: uuid.New(),
 			StartAt:                uint32(time.Now().Unix()),
 			EndAt:                  uint32(time.Now().Add(100 * time.Hour).Unix()),
-			CouponID:               uuid.New(),
+			FixAmountCouponID:      uuid.New(),
 			Type:                   npool.OrderType_Airdrop.String(),
 			State:                  npool.OrderState_InService.String(),
 		},
@@ -123,7 +123,7 @@ func createBulk(t *testing.T) {
 			UserSpecialReductionID: uuid.New(),
 			StartAt:                uint32(time.Now().Unix()),
 			EndAt:                  uint32(time.Now().Add(100 * time.Hour).Unix()),
-			CouponID:               uuid.New(),
+			FixAmountCouponID:      uuid.New(),
 			Type:                   npool.OrderType_Airdrop.String(),
 			State:                  npool.OrderState_InService.String(),
 		},
@@ -139,7 +139,7 @@ func createBulk(t *testing.T) {
 		_promotionID := _appGood.PromotionID.String()
 		_discountCouponID := _appGood.DiscountCouponID.String()
 		_userSpecialReductionID := _appGood.UserSpecialReductionID.String()
-		_couponID := _appGood.CouponID.String()
+		_couponID := _appGood.FixAmountCouponID.String()
 		_tp := npool.OrderType_Airdrop
 		_state := npool.OrderState_InService
 		reqs = append(reqs, &npool.OrderReq{
@@ -155,7 +155,7 @@ func createBulk(t *testing.T) {
 			UserSpecialReductionID: &_userSpecialReductionID,
 			StartAt:                &_appGood.StartAt,
 			EndAt:                  &_appGood.EndAt,
-			CouponID:               &_couponID,
+			FixAmountCouponID:      &_couponID,
 			Type:                   &_tp,
 			State:                  &_state,
 		})

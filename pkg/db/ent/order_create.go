@@ -187,16 +187,16 @@ func (oc *OrderCreate) SetNillableEndAt(u *uint32) *OrderCreate {
 	return oc
 }
 
-// SetCouponID sets the "coupon_id" field.
-func (oc *OrderCreate) SetCouponID(u uuid.UUID) *OrderCreate {
-	oc.mutation.SetCouponID(u)
+// SetFixAmountCouponID sets the "fix_amount_coupon_id" field.
+func (oc *OrderCreate) SetFixAmountCouponID(u uuid.UUID) *OrderCreate {
+	oc.mutation.SetFixAmountCouponID(u)
 	return oc
 }
 
-// SetNillableCouponID sets the "coupon_id" field if the given value is not nil.
-func (oc *OrderCreate) SetNillableCouponID(u *uuid.UUID) *OrderCreate {
+// SetNillableFixAmountCouponID sets the "fix_amount_coupon_id" field if the given value is not nil.
+func (oc *OrderCreate) SetNillableFixAmountCouponID(u *uuid.UUID) *OrderCreate {
 	if u != nil {
-		oc.SetCouponID(*u)
+		oc.SetFixAmountCouponID(*u)
 	}
 	return oc
 }
@@ -383,12 +383,12 @@ func (oc *OrderCreate) defaults() error {
 		v := order.DefaultEndAt
 		oc.mutation.SetEndAt(v)
 	}
-	if _, ok := oc.mutation.CouponID(); !ok {
-		if order.DefaultCouponID == nil {
-			return fmt.Errorf("ent: uninitialized order.DefaultCouponID (forgotten import ent/runtime?)")
+	if _, ok := oc.mutation.FixAmountCouponID(); !ok {
+		if order.DefaultFixAmountCouponID == nil {
+			return fmt.Errorf("ent: uninitialized order.DefaultFixAmountCouponID (forgotten import ent/runtime?)")
 		}
-		v := order.DefaultCouponID()
-		oc.mutation.SetCouponID(v)
+		v := order.DefaultFixAmountCouponID()
+		oc.mutation.SetFixAmountCouponID(v)
 	}
 	if _, ok := oc.mutation.GetType(); !ok {
 		v := order.DefaultType
@@ -580,13 +580,13 @@ func (oc *OrderCreate) createSpec() (*Order, *sqlgraph.CreateSpec) {
 		})
 		_node.EndAt = value
 	}
-	if value, ok := oc.mutation.CouponID(); ok {
+	if value, ok := oc.mutation.FixAmountCouponID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
-			Column: order.FieldCouponID,
+			Column: order.FieldFixAmountCouponID,
 		})
-		_node.CouponID = value
+		_node.FixAmountCouponID = value
 	}
 	if value, ok := oc.mutation.GetType(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -904,21 +904,21 @@ func (u *OrderUpsert) ClearEndAt() *OrderUpsert {
 	return u
 }
 
-// SetCouponID sets the "coupon_id" field.
-func (u *OrderUpsert) SetCouponID(v uuid.UUID) *OrderUpsert {
-	u.Set(order.FieldCouponID, v)
+// SetFixAmountCouponID sets the "fix_amount_coupon_id" field.
+func (u *OrderUpsert) SetFixAmountCouponID(v uuid.UUID) *OrderUpsert {
+	u.Set(order.FieldFixAmountCouponID, v)
 	return u
 }
 
-// UpdateCouponID sets the "coupon_id" field to the value that was provided on create.
-func (u *OrderUpsert) UpdateCouponID() *OrderUpsert {
-	u.SetExcluded(order.FieldCouponID)
+// UpdateFixAmountCouponID sets the "fix_amount_coupon_id" field to the value that was provided on create.
+func (u *OrderUpsert) UpdateFixAmountCouponID() *OrderUpsert {
+	u.SetExcluded(order.FieldFixAmountCouponID)
 	return u
 }
 
-// ClearCouponID clears the value of the "coupon_id" field.
-func (u *OrderUpsert) ClearCouponID() *OrderUpsert {
-	u.SetNull(order.FieldCouponID)
+// ClearFixAmountCouponID clears the value of the "fix_amount_coupon_id" field.
+func (u *OrderUpsert) ClearFixAmountCouponID() *OrderUpsert {
+	u.SetNull(order.FieldFixAmountCouponID)
 	return u
 }
 
@@ -1295,24 +1295,24 @@ func (u *OrderUpsertOne) ClearEndAt() *OrderUpsertOne {
 	})
 }
 
-// SetCouponID sets the "coupon_id" field.
-func (u *OrderUpsertOne) SetCouponID(v uuid.UUID) *OrderUpsertOne {
+// SetFixAmountCouponID sets the "fix_amount_coupon_id" field.
+func (u *OrderUpsertOne) SetFixAmountCouponID(v uuid.UUID) *OrderUpsertOne {
 	return u.Update(func(s *OrderUpsert) {
-		s.SetCouponID(v)
+		s.SetFixAmountCouponID(v)
 	})
 }
 
-// UpdateCouponID sets the "coupon_id" field to the value that was provided on create.
-func (u *OrderUpsertOne) UpdateCouponID() *OrderUpsertOne {
+// UpdateFixAmountCouponID sets the "fix_amount_coupon_id" field to the value that was provided on create.
+func (u *OrderUpsertOne) UpdateFixAmountCouponID() *OrderUpsertOne {
 	return u.Update(func(s *OrderUpsert) {
-		s.UpdateCouponID()
+		s.UpdateFixAmountCouponID()
 	})
 }
 
-// ClearCouponID clears the value of the "coupon_id" field.
-func (u *OrderUpsertOne) ClearCouponID() *OrderUpsertOne {
+// ClearFixAmountCouponID clears the value of the "fix_amount_coupon_id" field.
+func (u *OrderUpsertOne) ClearFixAmountCouponID() *OrderUpsertOne {
 	return u.Update(func(s *OrderUpsert) {
-		s.ClearCouponID()
+		s.ClearFixAmountCouponID()
 	})
 }
 
@@ -1861,24 +1861,24 @@ func (u *OrderUpsertBulk) ClearEndAt() *OrderUpsertBulk {
 	})
 }
 
-// SetCouponID sets the "coupon_id" field.
-func (u *OrderUpsertBulk) SetCouponID(v uuid.UUID) *OrderUpsertBulk {
+// SetFixAmountCouponID sets the "fix_amount_coupon_id" field.
+func (u *OrderUpsertBulk) SetFixAmountCouponID(v uuid.UUID) *OrderUpsertBulk {
 	return u.Update(func(s *OrderUpsert) {
-		s.SetCouponID(v)
+		s.SetFixAmountCouponID(v)
 	})
 }
 
-// UpdateCouponID sets the "coupon_id" field to the value that was provided on create.
-func (u *OrderUpsertBulk) UpdateCouponID() *OrderUpsertBulk {
+// UpdateFixAmountCouponID sets the "fix_amount_coupon_id" field to the value that was provided on create.
+func (u *OrderUpsertBulk) UpdateFixAmountCouponID() *OrderUpsertBulk {
 	return u.Update(func(s *OrderUpsert) {
-		s.UpdateCouponID()
+		s.UpdateFixAmountCouponID()
 	})
 }
 
-// ClearCouponID clears the value of the "coupon_id" field.
-func (u *OrderUpsertBulk) ClearCouponID() *OrderUpsertBulk {
+// ClearFixAmountCouponID clears the value of the "fix_amount_coupon_id" field.
+func (u *OrderUpsertBulk) ClearFixAmountCouponID() *OrderUpsertBulk {
 	return u.Update(func(s *OrderUpsert) {
-		s.ClearCouponID()
+		s.ClearFixAmountCouponID()
 	})
 }
 

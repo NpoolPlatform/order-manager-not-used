@@ -40,8 +40,8 @@ const (
 	FieldStartAt = "start_at"
 	// FieldEndAt holds the string denoting the end_at field in the database.
 	FieldEndAt = "end_at"
-	// FieldCouponID holds the string denoting the coupon_id field in the database.
-	FieldCouponID = "coupon_id"
+	// FieldFixAmountCouponID holds the string denoting the fix_amount_coupon_id field in the database.
+	FieldFixAmountCouponID = "fix_amount_coupon_id"
 	// FieldType holds the string denoting the type field in the database.
 	FieldType = "type"
 	// FieldState holds the string denoting the state field in the database.
@@ -67,7 +67,7 @@ var Columns = []string{
 	FieldUserSpecialReductionID,
 	FieldStartAt,
 	FieldEndAt,
-	FieldCouponID,
+	FieldFixAmountCouponID,
 	FieldType,
 	FieldState,
 }
@@ -113,8 +113,8 @@ var (
 	DefaultStartAt uint32
 	// DefaultEndAt holds the default value on creation for the "end_at" field.
 	DefaultEndAt uint32
-	// DefaultCouponID holds the default value on creation for the "coupon_id" field.
-	DefaultCouponID func() uuid.UUID
+	// DefaultFixAmountCouponID holds the default value on creation for the "fix_amount_coupon_id" field.
+	DefaultFixAmountCouponID func() uuid.UUID
 	// DefaultType holds the default value on creation for the "type" field.
 	DefaultType string
 	// DefaultState holds the default value on creation for the "state" field.

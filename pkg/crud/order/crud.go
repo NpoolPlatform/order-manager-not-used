@@ -59,8 +59,8 @@ func CreateSet(c *ent.OrderCreate, in *npool.OrderReq) (*ent.OrderCreate, error)
 	if in.EndAt != nil {
 		c.SetEndAt(in.GetEndAt())
 	}
-	if in.CouponID != nil {
-		c.SetCouponID(uuid.MustParse(in.GetCouponID()))
+	if in.FixAmountCouponID != nil {
+		c.SetFixAmountCouponID(uuid.MustParse(in.GetFixAmountCouponID()))
 	}
 	if in.Type != nil {
 		c.SetType(in.GetType().String())

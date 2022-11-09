@@ -268,23 +268,23 @@ func (ou *OrderUpdate) ClearEndAt() *OrderUpdate {
 	return ou
 }
 
-// SetCouponID sets the "coupon_id" field.
-func (ou *OrderUpdate) SetCouponID(u uuid.UUID) *OrderUpdate {
-	ou.mutation.SetCouponID(u)
+// SetFixAmountCouponID sets the "fix_amount_coupon_id" field.
+func (ou *OrderUpdate) SetFixAmountCouponID(u uuid.UUID) *OrderUpdate {
+	ou.mutation.SetFixAmountCouponID(u)
 	return ou
 }
 
-// SetNillableCouponID sets the "coupon_id" field if the given value is not nil.
-func (ou *OrderUpdate) SetNillableCouponID(u *uuid.UUID) *OrderUpdate {
+// SetNillableFixAmountCouponID sets the "fix_amount_coupon_id" field if the given value is not nil.
+func (ou *OrderUpdate) SetNillableFixAmountCouponID(u *uuid.UUID) *OrderUpdate {
 	if u != nil {
-		ou.SetCouponID(*u)
+		ou.SetFixAmountCouponID(*u)
 	}
 	return ou
 }
 
-// ClearCouponID clears the value of the "coupon_id" field.
-func (ou *OrderUpdate) ClearCouponID() *OrderUpdate {
-	ou.mutation.ClearCouponID()
+// ClearFixAmountCouponID clears the value of the "fix_amount_coupon_id" field.
+func (ou *OrderUpdate) ClearFixAmountCouponID() *OrderUpdate {
+	ou.mutation.ClearFixAmountCouponID()
 	return ou
 }
 
@@ -602,17 +602,17 @@ func (ou *OrderUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: order.FieldEndAt,
 		})
 	}
-	if value, ok := ou.mutation.CouponID(); ok {
+	if value, ok := ou.mutation.FixAmountCouponID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
-			Column: order.FieldCouponID,
+			Column: order.FieldFixAmountCouponID,
 		})
 	}
-	if ou.mutation.CouponIDCleared() {
+	if ou.mutation.FixAmountCouponIDCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
-			Column: order.FieldCouponID,
+			Column: order.FieldFixAmountCouponID,
 		})
 	}
 	if value, ok := ou.mutation.GetType(); ok {
@@ -900,23 +900,23 @@ func (ouo *OrderUpdateOne) ClearEndAt() *OrderUpdateOne {
 	return ouo
 }
 
-// SetCouponID sets the "coupon_id" field.
-func (ouo *OrderUpdateOne) SetCouponID(u uuid.UUID) *OrderUpdateOne {
-	ouo.mutation.SetCouponID(u)
+// SetFixAmountCouponID sets the "fix_amount_coupon_id" field.
+func (ouo *OrderUpdateOne) SetFixAmountCouponID(u uuid.UUID) *OrderUpdateOne {
+	ouo.mutation.SetFixAmountCouponID(u)
 	return ouo
 }
 
-// SetNillableCouponID sets the "coupon_id" field if the given value is not nil.
-func (ouo *OrderUpdateOne) SetNillableCouponID(u *uuid.UUID) *OrderUpdateOne {
+// SetNillableFixAmountCouponID sets the "fix_amount_coupon_id" field if the given value is not nil.
+func (ouo *OrderUpdateOne) SetNillableFixAmountCouponID(u *uuid.UUID) *OrderUpdateOne {
 	if u != nil {
-		ouo.SetCouponID(*u)
+		ouo.SetFixAmountCouponID(*u)
 	}
 	return ouo
 }
 
-// ClearCouponID clears the value of the "coupon_id" field.
-func (ouo *OrderUpdateOne) ClearCouponID() *OrderUpdateOne {
-	ouo.mutation.ClearCouponID()
+// ClearFixAmountCouponID clears the value of the "fix_amount_coupon_id" field.
+func (ouo *OrderUpdateOne) ClearFixAmountCouponID() *OrderUpdateOne {
+	ouo.mutation.ClearFixAmountCouponID()
 	return ouo
 }
 
@@ -1264,17 +1264,17 @@ func (ouo *OrderUpdateOne) sqlSave(ctx context.Context) (_node *Order, err error
 			Column: order.FieldEndAt,
 		})
 	}
-	if value, ok := ouo.mutation.CouponID(); ok {
+	if value, ok := ouo.mutation.FixAmountCouponID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
 			Value:  value,
-			Column: order.FieldCouponID,
+			Column: order.FieldFixAmountCouponID,
 		})
 	}
-	if ouo.mutation.CouponIDCleared() {
+	if ouo.mutation.FixAmountCouponIDCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
-			Column: order.FieldCouponID,
+			Column: order.FieldFixAmountCouponID,
 		})
 	}
 	if value, ok := ouo.mutation.GetType(); ok {

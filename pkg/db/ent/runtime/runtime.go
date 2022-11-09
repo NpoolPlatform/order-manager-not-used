@@ -121,10 +121,10 @@ func init() {
 	orderDescEndAt := orderFields[11].Descriptor()
 	// order.DefaultEndAt holds the default value on creation for the end_at field.
 	order.DefaultEndAt = orderDescEndAt.Default.(uint32)
-	// orderDescCouponID is the schema descriptor for coupon_id field.
-	orderDescCouponID := orderFields[12].Descriptor()
-	// order.DefaultCouponID holds the default value on creation for the coupon_id field.
-	order.DefaultCouponID = orderDescCouponID.Default.(func() uuid.UUID)
+	// orderDescFixAmountCouponID is the schema descriptor for fix_amount_coupon_id field.
+	orderDescFixAmountCouponID := orderFields[12].Descriptor()
+	// order.DefaultFixAmountCouponID holds the default value on creation for the fix_amount_coupon_id field.
+	order.DefaultFixAmountCouponID = orderDescFixAmountCouponID.Default.(func() uuid.UUID)
 	// orderDescType is the schema descriptor for type field.
 	orderDescType := orderFields[13].Descriptor()
 	// order.DefaultType holds the default value on creation for the type field.

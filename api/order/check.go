@@ -99,16 +99,6 @@ func validate(info *npool.OrderReq) error {
 		return status.Error(codes.InvalidArgument, "End is zero or empty")
 	}
 
-	if info.CouponID == nil {
-		logger.Sugar().Errorw("validate", "CouponID", info.GetCouponID())
-		return status.Error(codes.InvalidArgument, "CouponID is empty")
-	}
-
-	if _, err := uuid.Parse(info.GetCouponID()); err != nil {
-		logger.Sugar().Errorw("validate", "CouponIDID", info.GetCouponID(), "error", err)
-		return status.Error(codes.InvalidArgument, fmt.Sprintf("CouponID is invalid: %v", err))
-	}
-
 	switch info.GetType() {
 	case npool.OrderType_Normal:
 	case npool.OrderType_Offline:
