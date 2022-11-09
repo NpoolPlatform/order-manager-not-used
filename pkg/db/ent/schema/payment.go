@@ -4,6 +4,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/schema/field"
+	"github.com/NpoolPlatform/order-manager/pkg/db/mixin"
 
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
@@ -14,6 +15,12 @@ import (
 // Payment holds the schema definition for the Payment entity.
 type Payment struct {
 	ent.Schema
+}
+
+func (Payment) Mixin() []ent.Mixin {
+	return []ent.Mixin{
+		mixin.TimeMixin{},
+	}
 }
 
 // Fields of the Payment.
@@ -33,8 +40,6 @@ func (Payment) Fields() []ent.Field {
 			UUID("order_id", uuid.UUID{}),
 		field.
 			UUID("account_id", uuid.UUID{}),
-		field.
-			Uint64("start_amount"),
 		field.
 			Other("start_amount", decimal.Decimal{}).
 			SchemaType(map[string]string{

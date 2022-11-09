@@ -1,4 +1,4 @@
-package state
+package outofgas
 
 import (
 	"context"
@@ -7,12 +7,12 @@ import (
 	"strconv"
 	"testing"
 
+	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	"github.com/NpoolPlatform/order-manager/pkg/db/ent"
 
-	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-
 	valuedef "github.com/NpoolPlatform/message/npool"
-	npool "github.com/NpoolPlatform/message/npool/order/mgr/v1/order/state"
+	npool "github.com/NpoolPlatform/message/npool/order/mgr/v1/outofgas"
+
 	testinit "github.com/NpoolPlatform/order-manager/pkg/testinit"
 	"github.com/google/uuid"
 
@@ -28,60 +28,61 @@ func init() {
 	}
 }
 
-var entity = ent.State{
+var appGood = ent.OutOfGas{
 	ID:      uuid.New(),
 	OrderID: uuid.New(),
-	State:   npool.EState_WaitPayment.String(),
+	Start:   1000,
+	End:     1000,
 }
 
 var (
-	id      = entity.ID.String()
-	orderID = entity.OrderID.String()
-	status  = npool.EState(npool.EState_value[entity.State])
-
-	req = npool.StateReq{
+	id      = appGood.ID.String()
+	orderID = appGood.OrderID.String()
+	req     = npool.OutOfGasReq{
 		ID:      &id,
 		OrderID: &orderID,
-		State:   &status,
+		Start:   &appGood.Start,
+		End:     &appGood.End,
 	}
 )
 
-var info *ent.State
+var info *ent.OutOfGas
 
 func create(t *testing.T) {
 	var err error
 	info, err = Create(context.Background(), &req)
 	if assert.Nil(t, err) {
-		entity.UpdatedAt = info.UpdatedAt
-		entity.CreatedAt = info.CreatedAt
-		assert.Equal(t, info.String(), entity.String())
+		appGood.UpdatedAt = info.UpdatedAt
+		appGood.CreatedAt = info.CreatedAt
+		assert.Equal(t, info.String(), appGood.String())
 	}
 }
 
 func createBulk(t *testing.T) {
-	entities := []*ent.State{
+	entities := []*ent.OutOfGas{
 		{
 			ID:      uuid.New(),
 			OrderID: uuid.New(),
-			State:   npool.EState_Paid.String(),
+			Start:   1000,
+			End:     1000,
 		},
 		{
 			ID:      uuid.New(),
 			OrderID: uuid.New(),
-			State:   npool.EState_Canceled.String(),
+			Start:   1000,
+			End:     1000,
 		},
 	}
 
-	reqs := []*npool.StateReq{}
-	for _, _entity := range entities {
-		_id := _entity.ID.String()
-		_orderID := _entity.OrderID.String()
-		_state := npool.EState(npool.EState_value[_entity.State])
-
-		reqs = append(reqs, &npool.StateReq{
+	reqs := []*npool.OutOfGasReq{}
+	for _, _appGood := range entities {
+		_id := _appGood.ID.String()
+		_orderID := _appGood.OrderID.String()
+		reqs = append(reqs, &npool.OutOfGasReq{
 			ID:      &_id,
 			OrderID: &_orderID,
-			State:   &_state,
+			Start:   &_appGood.Start,
+			End:     &_appGood.End,
 		})
 	}
 	infos, err := CreateBulk(context.Background(), reqs)
@@ -90,11 +91,20 @@ func createBulk(t *testing.T) {
 	}
 }
 
+func update(t *testing.T) {
+	var err error
+	info, err = Update(context.Background(), &req)
+	if assert.Nil(t, err) {
+		appGood.UpdatedAt = info.UpdatedAt
+		appGood.CreatedAt = info.CreatedAt
+		assert.Equal(t, info.String(), appGood.String())
+	}
+}
 func row(t *testing.T) {
 	var err error
-	info, err = Row(context.Background(), entity.ID)
+	info, err = Row(context.Background(), appGood.ID)
 	if assert.Nil(t, err) {
-		assert.Equal(t, info.String(), entity.String())
+		assert.Equal(t, info.String(), appGood.String())
 	}
 }
 
@@ -108,7 +118,7 @@ func rows(t *testing.T) {
 		}, 0, 0)
 	if assert.Nil(t, err) {
 		if assert.Equal(t, total, 1) {
-			assert.Equal(t, infos[0].String(), entity.String())
+			assert.Equal(t, infos[0].String(), appGood.String())
 		}
 	}
 }
@@ -123,7 +133,7 @@ func rowOnly(t *testing.T) {
 			},
 		})
 	if assert.Nil(t, err) {
-		assert.Equal(t, info.String(), entity.String())
+		assert.Equal(t, info.String(), appGood.String())
 	}
 }
 
@@ -142,7 +152,7 @@ func count(t *testing.T) {
 }
 
 func exist(t *testing.T) {
-	exist, err := Exist(context.Background(), entity.ID)
+	exist, err := Exist(context.Background(), appGood.ID)
 	if assert.Nil(t, err) {
 		assert.Equal(t, exist, true)
 	}
@@ -163,26 +173,26 @@ func existConds(t *testing.T) {
 }
 
 func deleteA(t *testing.T) {
-	info, err := Delete(context.Background(), entity.ID)
+	info, err := Delete(context.Background(), appGood.ID.String())
 	if assert.Nil(t, err) {
-		entity.DeletedAt = info.DeletedAt
-		assert.Equal(t, info.String(), entity.String())
+		appGood.DeletedAt = info.DeletedAt
+		appGood.UpdatedAt = info.UpdatedAt
+		assert.Equal(t, info.String(), appGood.String())
 	}
 }
 
-func TestState(t *testing.T) {
+func TestDetail(t *testing.T) {
 	if runByGithubAction, err := strconv.ParseBool(os.Getenv("RUN_BY_GITHUB_ACTION")); err == nil && runByGithubAction {
 		return
 	}
 	t.Run("create", create)
-	if false {
-		t.Run("createBulk", createBulk)
-		t.Run("row", row)
-		t.Run("rows", rows)
-		t.Run("rowOnly", rowOnly)
-		t.Run("exist", exist)
-		t.Run("existConds", existConds)
-		t.Run("count", count)
-		t.Run("delete", deleteA)
-	}
+	t.Run("createBulk", createBulk)
+	t.Run("update", update)
+	t.Run("row", row)
+	t.Run("rows", rows)
+	t.Run("rowOnly", rowOnly)
+	t.Run("exist", exist)
+	t.Run("existConds", existConds)
+	t.Run("count", count)
+	t.Run("delete", deleteA)
 }

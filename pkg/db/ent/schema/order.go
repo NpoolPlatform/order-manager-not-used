@@ -23,12 +23,16 @@ func (Order) Mixin() []ent.Mixin {
 // Fields of the Order.
 func (Order) Fields() []ent.Field {
 	return []ent.Field{
-		field.UUID("id", uuid.UUID{}).
+		field.
+			UUID("id", uuid.UUID{}).
 			Default(uuid.New).
 			Unique(),
-		field.UUID("good_id", uuid.UUID{}),
-		field.UUID("app_id", uuid.UUID{}),
-		field.UUID("user_id", uuid.UUID{}),
+		field.
+			UUID("good_id", uuid.UUID{}),
+		field.
+			UUID("app_id", uuid.UUID{}),
+		field.
+			UUID("user_id", uuid.UUID{}),
 		field.
 			UUID("parent_order_id", uuid.UUID{}).
 			Optional().
@@ -39,7 +43,8 @@ func (Order) Fields() []ent.Field {
 			Bool("pay_with_parent").
 			Optional().
 			Default(false),
-		field.Uint32("units"),
+		field.
+			Uint32("units"),
 		field.
 			UUID("promotion_id", uuid.UUID{}).
 			Optional().
@@ -58,10 +63,12 @@ func (Order) Fields() []ent.Field {
 			Default(func() uuid.UUID {
 				return uuid.UUID{}
 			}),
-		field.Uint32("start_at").
+		field.
+			Uint32("start_at").
 			Optional().
 			Default(0),
-		field.Uint32("end_at").
+		field.
+			Uint32("end_at").
 			Optional().
 			Default(0),
 		field.
@@ -70,10 +77,12 @@ func (Order) Fields() []ent.Field {
 			Default(func() uuid.UUID {
 				return uuid.UUID{}
 			}),
-		field.String("order_type").
+		field.
+			String("type").
 			Optional().
 			Default(order.OrderType_DefaultOrderType.String()),
-		field.String("state").
+		field.
+			String("state").
 			Optional().
 			Default(order.OrderState_DefaultState.String()),
 	}

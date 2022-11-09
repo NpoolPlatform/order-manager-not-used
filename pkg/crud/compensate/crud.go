@@ -1,4 +1,4 @@
-package state
+package compensate
 
 import (
 	"context"
@@ -7,21 +7,45 @@ import (
 
 	constant "github.com/NpoolPlatform/order-manager/pkg/message/const"
 	commontracer "github.com/NpoolPlatform/order-manager/pkg/tracer"
-	tracer "github.com/NpoolPlatform/order-manager/pkg/tracer/state"
+	tracer "github.com/NpoolPlatform/order-manager/pkg/tracer/compensate"
+
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
 
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	npool "github.com/NpoolPlatform/message/npool/order/mgr/v1/order/state"
+	npool "github.com/NpoolPlatform/message/npool/order/mgr/v1/compensate"
 	"github.com/NpoolPlatform/order-manager/pkg/db"
 	"github.com/NpoolPlatform/order-manager/pkg/db/ent"
-	"github.com/NpoolPlatform/order-manager/pkg/db/ent/state"
+	"github.com/NpoolPlatform/order-manager/pkg/db/ent/compensate"
 
 	"github.com/google/uuid"
 )
 
-func Create(ctx context.Context, in *npool.StateReq) (*ent.State, error) {
-	var info *ent.State
+func CreateSet(c *ent.CompensateCreate, in *npool.CompensateReq) (*ent.CompensateCreate, error) {
+	if in.ID != nil {
+		c.SetID(uuid.MustParse(in.GetID()))
+	}
+	if in.OrderID != nil {
+		c.SetOrderID(uuid.MustParse(in.GetOrderID()))
+	}
+	if in.Start != nil {
+		c.SetStart(in.GetStart())
+	}
+	if in.End != nil {
+		c.SetEnd(in.GetEnd())
+	}
+	if in.CreatedAt != nil {
+		c.SetCreatedAt(in.GetCreatedAt())
+	}
+	if in.Message != nil {
+		c.SetMessage(in.GetMessage())
+	}
+
+	return c, nil
+}
+
+func Create(ctx context.Context, in *npool.CompensateReq) (*ent.Compensate, error) {
+	var info *ent.Compensate
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Create")
@@ -37,19 +61,12 @@ func Create(ctx context.Context, in *npool.StateReq) (*ent.State, error) {
 	span = tracer.Trace(span, in)
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		c := cli.Debug().State.Create()
-
-		if in.ID != nil {
-			c.SetID(uuid.MustParse(in.GetID()))
+		c := cli.Compensate.Create()
+		stm, err := CreateSet(c, in)
+		if err != nil {
+			return err
 		}
-		if in.OrderID != nil {
-			c.SetOrderID(uuid.MustParse(in.GetOrderID()))
-		}
-		if in.State != nil {
-			c.SetState(in.GetState().String())
-		}
-
-		info, err = c.Save(_ctx)
+		info, err = stm.Save(_ctx)
 		return err
 	})
 	if err != nil {
@@ -59,7 +76,7 @@ func Create(ctx context.Context, in *npool.StateReq) (*ent.State, error) {
 	return info, nil
 }
 
-func CreateBulk(ctx context.Context, in []*npool.StateReq) ([]*ent.State, error) {
+func CreateBulk(ctx context.Context, in []*npool.CompensateReq) ([]*ent.Compensate, error) {
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CreateBulk")
@@ -74,22 +91,17 @@ func CreateBulk(ctx context.Context, in []*npool.StateReq) ([]*ent.State, error)
 
 	span = tracer.TraceMany(span, in)
 
-	rows := []*ent.State{}
+	rows := []*ent.Compensate{}
 	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
-		bulk := make([]*ent.StateCreate, len(in))
+		bulk := make([]*ent.CompensateCreate, len(in))
 		for i, info := range in {
-			bulk[i] = tx.State.Create()
-			if info.ID != nil {
-				bulk[i].SetID(uuid.MustParse(info.GetID()))
-			}
-			if info.OrderID != nil {
-				bulk[i].SetOrderID(uuid.MustParse(info.GetOrderID()))
-			}
-			if info.State != nil {
-				bulk[i].SetState(info.GetState().String())
+			bulk[i] = tx.Compensate.Create()
+			bulk[i], err = CreateSet(bulk[i], info)
+			if err != nil {
+				return err
 			}
 		}
-		rows, err = tx.State.CreateBulk(bulk...).Save(_ctx)
+		rows, err = tx.Compensate.CreateBulk(bulk...).Save(_ctx)
 		return err
 	})
 	if err != nil {
@@ -98,8 +110,59 @@ func CreateBulk(ctx context.Context, in []*npool.StateReq) ([]*ent.State, error)
 	return rows, nil
 }
 
-func Row(ctx context.Context, id uuid.UUID) (*ent.State, error) {
-	var info *ent.State
+func UpdateSet(u *ent.CompensateUpdateOne, in *npool.CompensateReq) (*ent.CompensateUpdateOne, error) {
+	if in.Start != nil {
+		u.SetStart(in.GetStart())
+	}
+	if in.End != nil {
+		u.SetEnd(in.GetEnd())
+	}
+	if in.Message != nil {
+		u.SetMessage(in.GetMessage())
+	}
+
+	return u, nil
+}
+
+func Update(ctx context.Context, in *npool.CompensateReq) (*ent.Compensate, error) {
+	var info *ent.Compensate
+	var err error
+
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Update")
+	defer span.End()
+
+	defer func() {
+		if err != nil {
+			span.SetStatus(codes.Error, "db operation fail")
+			span.RecordError(err)
+		}
+	}()
+
+	span = tracer.Trace(span, in)
+
+	err = db.WithTx(ctx, func(_ctx context.Context, tx *ent.Tx) error {
+		info, err = tx.Compensate.Query().Where(compensate.ID(uuid.MustParse(in.GetID()))).ForUpdate().Only(_ctx)
+		if err != nil {
+			return err
+		}
+
+		stm, err := UpdateSet(info.Update(), in)
+		if err != nil {
+			return err
+		}
+
+		info, err = stm.Save(_ctx)
+		return err
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return info, nil
+}
+
+func Row(ctx context.Context, id uuid.UUID) (*ent.Compensate, error) {
+	var info *ent.Compensate
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Row")
@@ -115,7 +178,7 @@ func Row(ctx context.Context, id uuid.UUID) (*ent.State, error) {
 	span = commontracer.TraceID(span, id.String())
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		info, err = cli.State.Query().Where(state.ID(id)).Only(_ctx)
+		info, err = cli.Compensate.Query().Where(compensate.ID(id)).Only(_ctx)
 		return err
 	})
 	if err != nil {
@@ -125,36 +188,47 @@ func Row(ctx context.Context, id uuid.UUID) (*ent.State, error) {
 	return info, nil
 }
 
-func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.StateQuery, error) {
-	stm := cli.State.Query()
+func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.CompensateQuery, error) {
+	stm := cli.Compensate.Query()
+	if conds == nil {
+		return stm, nil
+	}
 	if conds.ID != nil {
 		switch conds.GetID().GetOp() {
 		case cruder.EQ:
-			stm.Where(state.ID(uuid.MustParse(conds.GetID().GetValue())))
+			stm.Where(compensate.ID(uuid.MustParse(conds.GetID().GetValue())))
 		default:
-			return nil, fmt.Errorf("invalid state field")
+			return nil, fmt.Errorf("invalid compensate field")
 		}
 	}
 	if conds.OrderID != nil {
 		switch conds.GetOrderID().GetOp() {
 		case cruder.EQ:
-			stm.Where(state.OrderID(uuid.MustParse(conds.GetOrderID().GetValue())))
+			stm.Where(compensate.OrderID(uuid.MustParse(conds.GetOrderID().GetValue())))
 		default:
-			return nil, fmt.Errorf("invalid state field")
+			return nil, fmt.Errorf("invalid compensate field")
 		}
 	}
-	if conds.State != nil {
-		switch conds.GetState().GetOp() {
+	if conds.Start != nil {
+		switch conds.GetStart().GetOp() {
 		case cruder.EQ:
-			stm.Where(state.State(npool.EState(conds.GetState().GetValue()).String()))
+			stm.Where(compensate.Start(conds.GetStart().GetValue()))
 		default:
-			return nil, fmt.Errorf("invalid state field")
+			return nil, fmt.Errorf("invalid compensate field")
+		}
+	}
+	if conds.End != nil {
+		switch conds.GetEnd().GetOp() {
+		case cruder.EQ:
+			stm.Where(compensate.Start(conds.GetEnd().GetValue()))
+		default:
+			return nil, fmt.Errorf("invalid compensate field")
 		}
 	}
 	return stm, nil
 }
 
-func Rows(ctx context.Context, conds *npool.Conds, offset, limit int) ([]*ent.State, int, error) {
+func Rows(ctx context.Context, conds *npool.Conds, offset, limit int) ([]*ent.Compensate, int, error) {
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Rows")
@@ -170,7 +244,7 @@ func Rows(ctx context.Context, conds *npool.Conds, offset, limit int) ([]*ent.St
 	span = tracer.TraceConds(span, conds)
 	span = commontracer.TraceOffsetLimit(span, offset, limit)
 
-	rows := []*ent.State{}
+	rows := []*ent.Compensate{}
 	var total int
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		stm, err := setQueryConds(conds, cli)
@@ -185,7 +259,7 @@ func Rows(ctx context.Context, conds *npool.Conds, offset, limit int) ([]*ent.St
 
 		rows, err = stm.
 			Offset(offset).
-			Order(ent.Desc(state.FieldUpdatedAt)).
+			Order(ent.Desc(compensate.FieldUpdatedAt)).
 			Limit(limit).
 			All(_ctx)
 		if err != nil {
@@ -200,8 +274,8 @@ func Rows(ctx context.Context, conds *npool.Conds, offset, limit int) ([]*ent.St
 	return rows, total, nil
 }
 
-func RowOnly(ctx context.Context, conds *npool.Conds) (*ent.State, error) {
-	var info *ent.State
+func RowOnly(ctx context.Context, conds *npool.Conds) (*ent.Compensate, error) {
+	var info *ent.Compensate
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "RowOnly")
@@ -219,9 +293,6 @@ func RowOnly(ctx context.Context, conds *npool.Conds) (*ent.State, error) {
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
 		stm, err := setQueryConds(conds, cli)
 		if err != nil {
-			if ent.IsNotFound(err) {
-				return nil
-			}
 			return err
 		}
 
@@ -291,7 +362,7 @@ func Exist(ctx context.Context, id uuid.UUID) (bool, error) {
 	span = commontracer.TraceID(span, id.String())
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		exist, err = cli.State.Query().Where(state.ID(id)).Exist(_ctx)
+		exist, err = cli.Compensate.Query().Where(compensate.ID(id)).Exist(_ctx)
 		return err
 	})
 	if err != nil {
@@ -337,8 +408,8 @@ func ExistConds(ctx context.Context, conds *npool.Conds) (bool, error) {
 	return exist, nil
 }
 
-func Delete(ctx context.Context, id uuid.UUID) (*ent.State, error) {
-	var info *ent.State
+func Delete(ctx context.Context, id string) (*ent.Compensate, error) {
+	var info *ent.Compensate
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "Delete")
@@ -351,10 +422,10 @@ func Delete(ctx context.Context, id uuid.UUID) (*ent.State, error) {
 		}
 	}()
 
-	span = commontracer.TraceID(span, id.String())
+	span = commontracer.TraceID(span, id)
 
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
-		info, err = cli.State.UpdateOneID(id).
+		info, err = cli.Compensate.UpdateOneID(uuid.MustParse(id)).
 			SetDeletedAt(uint32(time.Now().Unix())).
 			Save(_ctx)
 		return err
