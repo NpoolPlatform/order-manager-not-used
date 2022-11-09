@@ -1,14 +1,16 @@
+//nolint:dupl
 package payment
 
 import (
 	"context"
 	"fmt"
-	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	"github.com/NpoolPlatform/order-manager/pkg/db/ent"
-	"github.com/shopspring/decimal"
 	"os"
 	"strconv"
 	"testing"
+
+	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
+	"github.com/NpoolPlatform/order-manager/pkg/db/ent"
+	"github.com/shopspring/decimal"
 
 	valuedef "github.com/NpoolPlatform/message/npool"
 	npool "github.com/NpoolPlatform/message/npool/order/mgr/v1/payment"

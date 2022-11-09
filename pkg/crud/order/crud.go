@@ -21,6 +21,7 @@ import (
 	"github.com/google/uuid"
 )
 
+//nolint
 func CreateSet(c *ent.OrderCreate, in *npool.OrderReq) (*ent.OrderCreate, error) {
 	if in.ID != nil {
 		c.SetID(uuid.MustParse(in.GetID()))
@@ -224,6 +225,14 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.OrderQuery, error)
 			return nil, fmt.Errorf("invalid order field")
 		}
 	}
+	if conds.GoodID != nil {
+		switch conds.GetGoodID().GetOp() {
+		case cruder.EQ:
+			stm.Where(order.GoodID(uuid.MustParse(conds.GetGoodID().GetValue())))
+		default:
+			return nil, fmt.Errorf("invalid order field")
+		}
+	}
 	if conds.AppID != nil {
 		switch conds.GetAppID().GetOp() {
 		case cruder.EQ:
@@ -232,12 +241,28 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.OrderQuery, error)
 			return nil, fmt.Errorf("invalid order field")
 		}
 	}
-	if conds.GoodID != nil {
-		switch conds.GetGoodID().GetOp() {
+	if conds.UserID != nil {
+		switch conds.GetUserID().GetOp() {
 		case cruder.EQ:
-			stm.Where(order.GoodID(uuid.MustParse(conds.GetGoodID().GetValue())))
+			stm.Where(order.UserID(uuid.MustParse(conds.GetUserID().GetValue())))
 		default:
 			return nil, fmt.Errorf("invalid order field")
+		}
+	}
+	if conds.Type != nil {
+		switch conds.GetType().GetOp() {
+		case cruder.EQ:
+			stm.Where(order.Type(npool.OrderType(conds.GetType().GetValue()).String()))
+		default:
+			return nil, fmt.Errorf("invalid payment field")
+		}
+	}
+	if conds.State != nil {
+		switch conds.GetState().GetOp() {
+		case cruder.EQ:
+			stm.Where(order.State(npool.OrderType(conds.GetState().GetValue()).String()))
+		default:
+			return nil, fmt.Errorf("invalid payment field")
 		}
 	}
 	return stm, nil

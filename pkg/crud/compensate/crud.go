@@ -211,18 +211,22 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.CompensateQuery, e
 	}
 	if conds.Start != nil {
 		switch conds.GetStart().GetOp() {
-		case cruder.EQ:
-			stm.Where(compensate.Start(conds.GetStart().GetValue()))
+		case cruder.LTE:
+			stm.Where(compensate.StartLTE(conds.GetStart().GetValue()))
+		case cruder.GTE:
+			stm.Where(compensate.StartGTE(conds.GetStart().GetValue()))
 		default:
-			return nil, fmt.Errorf("invalid compensate field")
+			return nil, fmt.Errorf("invalid promotion field")
 		}
 	}
 	if conds.End != nil {
 		switch conds.GetEnd().GetOp() {
-		case cruder.EQ:
-			stm.Where(compensate.Start(conds.GetEnd().GetValue()))
+		case cruder.LTE:
+			stm.Where(compensate.EndLTE(conds.GetEnd().GetValue()))
+		case cruder.GTE:
+			stm.Where(compensate.EndGTE(conds.GetEnd().GetValue()))
 		default:
-			return nil, fmt.Errorf("invalid compensate field")
+			return nil, fmt.Errorf("invalid promotion field")
 		}
 	}
 	return stm, nil

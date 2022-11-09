@@ -3,8 +3,9 @@ package payment
 import (
 	"context"
 	"fmt"
-	"github.com/shopspring/decimal"
 	"time"
+
+	"github.com/shopspring/decimal"
 
 	constant "github.com/NpoolPlatform/order-manager/pkg/message/const"
 	commontracer "github.com/NpoolPlatform/order-manager/pkg/tracer"
@@ -22,6 +23,7 @@ import (
 	"github.com/google/uuid"
 )
 
+//nolint
 func CreateSet(c *ent.PaymentCreate, in *npool.PaymentReq) (*ent.PaymentCreate, error) {
 	if in.ID != nil {
 		c.SetID(uuid.MustParse(in.GetID()))
@@ -261,6 +263,7 @@ func Row(ctx context.Context, id uuid.UUID) (*ent.Payment, error) {
 	return info, nil
 }
 
+//nolint
 func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.PaymentQuery, error) {
 	stm := cli.Payment.Query()
 	if conds == nil {
@@ -282,10 +285,50 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.PaymentQuery, erro
 			return nil, fmt.Errorf("invalid payment field")
 		}
 	}
+	if conds.UserID != nil {
+		switch conds.GetUserID().GetOp() {
+		case cruder.EQ:
+			stm.Where(payment.UserID(uuid.MustParse(conds.GetUserID().GetValue())))
+		default:
+			return nil, fmt.Errorf("invalid payment field")
+		}
+	}
 	if conds.GoodID != nil {
 		switch conds.GetGoodID().GetOp() {
 		case cruder.EQ:
 			stm.Where(payment.GoodID(uuid.MustParse(conds.GetGoodID().GetValue())))
+		default:
+			return nil, fmt.Errorf("invalid payment field")
+		}
+	}
+	if conds.OrderID != nil {
+		switch conds.GetOrderID().GetOp() {
+		case cruder.EQ:
+			stm.Where(payment.OrderID(uuid.MustParse(conds.GetOrderID().GetValue())))
+		default:
+			return nil, fmt.Errorf("invalid payment field")
+		}
+	}
+	if conds.AccountID != nil {
+		switch conds.GetAccountID().GetOp() {
+		case cruder.EQ:
+			stm.Where(payment.AccountID(uuid.MustParse(conds.GetAccountID().GetValue())))
+		default:
+			return nil, fmt.Errorf("invalid payment field")
+		}
+	}
+	if conds.CoinInfoID != nil {
+		switch conds.GetCoinInfoID().GetOp() {
+		case cruder.EQ:
+			stm.Where(payment.CoinInfoID(uuid.MustParse(conds.GetCoinInfoID().GetValue())))
+		default:
+			return nil, fmt.Errorf("invalid payment field")
+		}
+	}
+	if conds.State != nil {
+		switch conds.GetState().GetOp() {
+		case cruder.EQ:
+			stm.Where(payment.State(npool.PaymentState(conds.GetState().GetValue()).String()))
 		default:
 			return nil, fmt.Errorf("invalid payment field")
 		}

@@ -205,18 +205,22 @@ func setQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.OutOfGasQuery, err
 	}
 	if conds.Start != nil {
 		switch conds.GetStart().GetOp() {
-		case cruder.EQ:
-			stm.Where(outofgas.Start(conds.GetStart().GetValue()))
+		case cruder.LTE:
+			stm.Where(outofgas.StartLTE(conds.GetStart().GetValue()))
+		case cruder.GTE:
+			stm.Where(outofgas.StartGTE(conds.GetStart().GetValue()))
 		default:
-			return nil, fmt.Errorf("invalid outofgas field")
+			return nil, fmt.Errorf("invalid promotion field")
 		}
 	}
 	if conds.End != nil {
 		switch conds.GetEnd().GetOp() {
-		case cruder.EQ:
-			stm.Where(outofgas.Start(conds.GetEnd().GetValue()))
+		case cruder.LTE:
+			stm.Where(outofgas.EndLTE(conds.GetEnd().GetValue()))
+		case cruder.GTE:
+			stm.Where(outofgas.EndGTE(conds.GetEnd().GetValue()))
 		default:
-			return nil, fmt.Errorf("invalid outofgas field")
+			return nil, fmt.Errorf("invalid promotion field")
 		}
 	}
 	return stm, nil
