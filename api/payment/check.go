@@ -103,22 +103,6 @@ func validate(info *npool.PaymentReq) error {
 		return status.Error(codes.InvalidArgument, "FinishAmount is empty")
 	}
 
-	finishAmount, err := decimal.NewFromString(info.GetFinishAmount())
-	if err != nil {
-		logger.Sugar().Errorw("validate", "FinishAmount", info.GetFinishAmount(), "error", err)
-		return status.Error(codes.InvalidArgument, fmt.Sprintf("FinishAmount is invalid: %v", err))
-	}
-
-	if finishAmount.Cmp(decimal.NewFromInt(0)) <= 0 {
-		logger.Sugar().Errorw("validate", "FinishAmount", info.GetFinishAmount(), "error", "less than 0")
-		return status.Error(codes.InvalidArgument, "GetFinishAmount is Less than or equal to 0")
-	}
-
-	if info.CoinUsdCurrency == nil {
-		logger.Sugar().Errorw("validate", "CoinUsdCurrency", info.CoinUsdCurrency)
-		return status.Error(codes.InvalidArgument, "CoinUsdCurrency is empty")
-	}
-
 	coinUsdCurrency, err := decimal.NewFromString(info.GetCoinUsdCurrency())
 	if err != nil {
 		logger.Sugar().Errorw("validate", "CoinUsdCurrency", info.GetCoinUsdCurrency(), "error", err)
