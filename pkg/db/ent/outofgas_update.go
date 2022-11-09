@@ -18,8 +18,9 @@ import (
 // OutOfGasUpdate is the builder for updating OutOfGas entities.
 type OutOfGasUpdate struct {
 	config
-	hooks    []Hook
-	mutation *OutOfGasMutation
+	hooks     []Hook
+	mutation  *OutOfGasMutation
+	modifiers []func(*sql.UpdateBuilder)
 }
 
 // Where appends a list predicates to the OutOfGasUpdate builder.
@@ -217,6 +218,12 @@ func (oogu *OutOfGasUpdate) defaults() error {
 	return nil
 }
 
+// Modify adds a statement modifier for attaching custom logic to the UPDATE statement.
+func (oogu *OutOfGasUpdate) Modify(modifiers ...func(u *sql.UpdateBuilder)) *OutOfGasUpdate {
+	oogu.modifiers = append(oogu.modifiers, modifiers...)
+	return oogu
+}
+
 func (oogu *OutOfGasUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
@@ -324,6 +331,7 @@ func (oogu *OutOfGasUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: outofgas.FieldEnd,
 		})
 	}
+	_spec.Modifiers = oogu.modifiers
 	if n, err = sqlgraph.UpdateNodes(ctx, oogu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{outofgas.Label}
@@ -338,9 +346,10 @@ func (oogu *OutOfGasUpdate) sqlSave(ctx context.Context) (n int, err error) {
 // OutOfGasUpdateOne is the builder for updating a single OutOfGas entity.
 type OutOfGasUpdateOne struct {
 	config
-	fields   []string
-	hooks    []Hook
-	mutation *OutOfGasMutation
+	fields    []string
+	hooks     []Hook
+	mutation  *OutOfGasMutation
+	modifiers []func(*sql.UpdateBuilder)
 }
 
 // SetCreatedAt sets the "created_at" field.
@@ -545,6 +554,12 @@ func (ooguo *OutOfGasUpdateOne) defaults() error {
 	return nil
 }
 
+// Modify adds a statement modifier for attaching custom logic to the UPDATE statement.
+func (ooguo *OutOfGasUpdateOne) Modify(modifiers ...func(u *sql.UpdateBuilder)) *OutOfGasUpdateOne {
+	ooguo.modifiers = append(ooguo.modifiers, modifiers...)
+	return ooguo
+}
+
 func (ooguo *OutOfGasUpdateOne) sqlSave(ctx context.Context) (_node *OutOfGas, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
@@ -669,6 +684,7 @@ func (ooguo *OutOfGasUpdateOne) sqlSave(ctx context.Context) (_node *OutOfGas, e
 			Column: outofgas.FieldEnd,
 		})
 	}
+	_spec.Modifiers = ooguo.modifiers
 	_node = &OutOfGas{config: ooguo.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues

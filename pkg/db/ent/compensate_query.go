@@ -480,6 +480,12 @@ func (cq *CompensateQuery) ForShare(opts ...sql.LockOption) *CompensateQuery {
 	return cq
 }
 
+// Modify adds a query modifier for attaching custom logic to queries.
+func (cq *CompensateQuery) Modify(modifiers ...func(s *sql.Selector)) *CompensateSelect {
+	cq.modifiers = append(cq.modifiers, modifiers...)
+	return cq.Select()
+}
+
 // CompensateGroupBy is the group-by builder for Compensate entities.
 type CompensateGroupBy struct {
 	config
@@ -570,4 +576,10 @@ func (cs *CompensateSelect) sqlScan(ctx context.Context, v interface{}) error {
 	}
 	defer rows.Close()
 	return sql.ScanSlice(rows, v)
+}
+
+// Modify adds a query modifier for attaching custom logic to queries.
+func (cs *CompensateSelect) Modify(modifiers ...func(s *sql.Selector)) *CompensateSelect {
+	cs.modifiers = append(cs.modifiers, modifiers...)
+	return cs
 }

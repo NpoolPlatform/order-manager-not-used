@@ -19,8 +19,9 @@ import (
 // PaymentUpdate is the builder for updating Payment entities.
 type PaymentUpdate struct {
 	config
-	hooks    []Hook
-	mutation *PaymentMutation
+	hooks     []Hook
+	mutation  *PaymentMutation
+	modifiers []func(*sql.UpdateBuilder)
 }
 
 // Where appends a list predicates to the PaymentUpdate builder.
@@ -434,6 +435,12 @@ func (pu *PaymentUpdate) defaults() error {
 	return nil
 }
 
+// Modify adds a statement modifier for attaching custom logic to the UPDATE statement.
+func (pu *PaymentUpdate) Modify(modifiers ...func(u *sql.UpdateBuilder)) *PaymentUpdate {
+	pu.modifiers = append(pu.modifiers, modifiers...)
+	return pu
+}
+
 func (pu *PaymentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
@@ -692,6 +699,7 @@ func (pu *PaymentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: payment.FieldFakePayment,
 		})
 	}
+	_spec.Modifiers = pu.modifiers
 	if n, err = sqlgraph.UpdateNodes(ctx, pu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{payment.Label}
@@ -706,9 +714,10 @@ func (pu *PaymentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 // PaymentUpdateOne is the builder for updating a single Payment entity.
 type PaymentUpdateOne struct {
 	config
-	fields   []string
-	hooks    []Hook
-	mutation *PaymentMutation
+	fields    []string
+	hooks     []Hook
+	mutation  *PaymentMutation
+	modifiers []func(*sql.UpdateBuilder)
 }
 
 // SetCreatedAt sets the "created_at" field.
@@ -1129,6 +1138,12 @@ func (puo *PaymentUpdateOne) defaults() error {
 	return nil
 }
 
+// Modify adds a statement modifier for attaching custom logic to the UPDATE statement.
+func (puo *PaymentUpdateOne) Modify(modifiers ...func(u *sql.UpdateBuilder)) *PaymentUpdateOne {
+	puo.modifiers = append(puo.modifiers, modifiers...)
+	return puo
+}
+
 func (puo *PaymentUpdateOne) sqlSave(ctx context.Context) (_node *Payment, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
@@ -1404,6 +1419,7 @@ func (puo *PaymentUpdateOne) sqlSave(ctx context.Context) (_node *Payment, err e
 			Column: payment.FieldFakePayment,
 		})
 	}
+	_spec.Modifiers = puo.modifiers
 	_node = &Payment{config: puo.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues

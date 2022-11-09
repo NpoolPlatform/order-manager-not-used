@@ -480,6 +480,12 @@ func (oq *OrderQuery) ForShare(opts ...sql.LockOption) *OrderQuery {
 	return oq
 }
 
+// Modify adds a query modifier for attaching custom logic to queries.
+func (oq *OrderQuery) Modify(modifiers ...func(s *sql.Selector)) *OrderSelect {
+	oq.modifiers = append(oq.modifiers, modifiers...)
+	return oq.Select()
+}
+
 // OrderGroupBy is the group-by builder for Order entities.
 type OrderGroupBy struct {
 	config
@@ -570,4 +576,10 @@ func (os *OrderSelect) sqlScan(ctx context.Context, v interface{}) error {
 	}
 	defer rows.Close()
 	return sql.ScanSlice(rows, v)
+}
+
+// Modify adds a query modifier for attaching custom logic to queries.
+func (os *OrderSelect) Modify(modifiers ...func(s *sql.Selector)) *OrderSelect {
+	os.modifiers = append(os.modifiers, modifiers...)
+	return os
 }

@@ -480,6 +480,12 @@ func (oogq *OutOfGasQuery) ForShare(opts ...sql.LockOption) *OutOfGasQuery {
 	return oogq
 }
 
+// Modify adds a query modifier for attaching custom logic to queries.
+func (oogq *OutOfGasQuery) Modify(modifiers ...func(s *sql.Selector)) *OutOfGasSelect {
+	oogq.modifiers = append(oogq.modifiers, modifiers...)
+	return oogq.Select()
+}
+
 // OutOfGasGroupBy is the group-by builder for OutOfGas entities.
 type OutOfGasGroupBy struct {
 	config
@@ -570,4 +576,10 @@ func (oogs *OutOfGasSelect) sqlScan(ctx context.Context, v interface{}) error {
 	}
 	defer rows.Close()
 	return sql.ScanSlice(rows, v)
+}
+
+// Modify adds a query modifier for attaching custom logic to queries.
+func (oogs *OutOfGasSelect) Modify(modifiers ...func(s *sql.Selector)) *OutOfGasSelect {
+	oogs.modifiers = append(oogs.modifiers, modifiers...)
+	return oogs
 }

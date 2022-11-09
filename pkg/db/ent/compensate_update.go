@@ -18,8 +18,9 @@ import (
 // CompensateUpdate is the builder for updating Compensate entities.
 type CompensateUpdate struct {
 	config
-	hooks    []Hook
-	mutation *CompensateMutation
+	hooks     []Hook
+	mutation  *CompensateMutation
+	modifiers []func(*sql.UpdateBuilder)
 }
 
 // Where appends a list predicates to the CompensateUpdate builder.
@@ -237,6 +238,12 @@ func (cu *CompensateUpdate) defaults() error {
 	return nil
 }
 
+// Modify adds a statement modifier for attaching custom logic to the UPDATE statement.
+func (cu *CompensateUpdate) Modify(modifiers ...func(u *sql.UpdateBuilder)) *CompensateUpdate {
+	cu.modifiers = append(cu.modifiers, modifiers...)
+	return cu
+}
+
 func (cu *CompensateUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
@@ -357,6 +364,7 @@ func (cu *CompensateUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: compensate.FieldMessage,
 		})
 	}
+	_spec.Modifiers = cu.modifiers
 	if n, err = sqlgraph.UpdateNodes(ctx, cu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{compensate.Label}
@@ -371,9 +379,10 @@ func (cu *CompensateUpdate) sqlSave(ctx context.Context) (n int, err error) {
 // CompensateUpdateOne is the builder for updating a single Compensate entity.
 type CompensateUpdateOne struct {
 	config
-	fields   []string
-	hooks    []Hook
-	mutation *CompensateMutation
+	fields    []string
+	hooks     []Hook
+	mutation  *CompensateMutation
+	modifiers []func(*sql.UpdateBuilder)
 }
 
 // SetCreatedAt sets the "created_at" field.
@@ -598,6 +607,12 @@ func (cuo *CompensateUpdateOne) defaults() error {
 	return nil
 }
 
+// Modify adds a statement modifier for attaching custom logic to the UPDATE statement.
+func (cuo *CompensateUpdateOne) Modify(modifiers ...func(u *sql.UpdateBuilder)) *CompensateUpdateOne {
+	cuo.modifiers = append(cuo.modifiers, modifiers...)
+	return cuo
+}
+
 func (cuo *CompensateUpdateOne) sqlSave(ctx context.Context) (_node *Compensate, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
@@ -735,6 +750,7 @@ func (cuo *CompensateUpdateOne) sqlSave(ctx context.Context) (_node *Compensate,
 			Column: compensate.FieldMessage,
 		})
 	}
+	_spec.Modifiers = cuo.modifiers
 	_node = &Compensate{config: cuo.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues
