@@ -196,6 +196,13 @@ func UpdateSet(u *ent.PaymentUpdateOne, in *npool.PaymentReq) (*ent.PaymentUpdat
 	if in.FakePayment != nil {
 		u.SetFakePayment(in.GetFakePayment())
 	}
+	if in.FinishAmount != nil {
+		finishAmount, err := decimal.NewFromString(in.GetFinishAmount())
+		if err != nil {
+			return nil, err
+		}
+		u.SetFinishAmount(finishAmount)
+	}
 	return u, nil
 }
 
