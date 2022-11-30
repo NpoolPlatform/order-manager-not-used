@@ -3,15 +3,17 @@ module github.com/NpoolPlatform/order-manager
 go 1.17
 
 require (
-	entgo.io/ent v0.11.2
+	bou.ke/monkey v1.0.2
+	entgo.io/ent v0.11.3
 	github.com/NpoolPlatform/api-manager v0.0.0-20220826022307-d72866fe3ec0
-	github.com/NpoolPlatform/go-service-framework v0.0.0-20220818105452-9457611ae070
-	github.com/NpoolPlatform/libent-cruder v0.0.0-20220621110548-8f3f8049ecc5
-	github.com/NpoolPlatform/message v0.0.0-20221109022611-ca37512e0c04
+	github.com/NpoolPlatform/go-service-framework v0.0.0-20221015040432-cd676d323379
+	github.com/NpoolPlatform/libent-cruder v0.0.0-20221104072329-1d7b4d7f09cb
+	github.com/NpoolPlatform/message v0.0.0-20221130022700-6ea25e8422fd
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/google/uuid v1.3.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.10.0
-	github.com/stretchr/testify v1.7.1
+	github.com/shopspring/decimal v1.3.1
+	github.com/stretchr/testify v1.8.0
 	github.com/urfave/cli/v2 v2.4.0
 	go.opentelemetry.io/otel v1.8.0
 	go.opentelemetry.io/otel/trace v1.8.0
@@ -53,7 +55,7 @@ require (
 	github.com/hashicorp/go-rootcerts v1.0.2 // indirect
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
-	github.com/hashicorp/hcl/v2 v2.10.0 // indirect
+	github.com/hashicorp/hcl/v2 v2.13.0 // indirect
 	github.com/hashicorp/serf v0.9.7 // indirect
 	github.com/magiconair/properties v1.8.6 // indirect
 	github.com/mattn/go-colorable v0.1.12 // indirect
@@ -94,7 +96,11 @@ require (
 	gopkg.in/ini.v1 v1.66.4 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
 replace google.golang.org/grpc => github.com/grpc/grpc-go v1.41.0
+
+replace entgo.io/ent => entgo.io/ent v0.11.2
+
+replace ariga.io/atlas => ariga.io/atlas v0.5.1-0.20220717122844-8593d7eb1a8e
