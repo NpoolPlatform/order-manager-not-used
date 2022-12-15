@@ -145,6 +145,12 @@ func UpdateSet(u *ent.OrderUpdateOne, in *npool.OrderReq) (*ent.OrderUpdateOne, 
 	if in.State != nil {
 		u.SetState(in.GetState().String())
 	}
+	if in.StartAt != nil {
+		u.SetStartAt(in.GetStartAt())
+	}
+	if in.EndAt != nil {
+		u.SetEndAt(in.GetEndAt())
+	}
 	return u, nil
 }
 
