@@ -46,6 +46,8 @@ const (
 	FieldType = "type"
 	// FieldState holds the string denoting the state field in the database.
 	FieldState = "state"
+	// FieldCouponIds holds the string denoting the coupon_ids field in the database.
+	FieldCouponIds = "coupon_ids"
 	// Table holds the table name of the order in the database.
 	Table = "orders"
 )
@@ -70,6 +72,7 @@ var Columns = []string{
 	FieldFixAmountCouponID,
 	FieldType,
 	FieldState,
+	FieldCouponIds,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -119,6 +122,8 @@ var (
 	DefaultType string
 	// DefaultState holds the default value on creation for the "state" field.
 	DefaultState string
+	// DefaultCouponIds holds the default value on creation for the "coupon_ids" field.
+	DefaultCouponIds func() []string
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )

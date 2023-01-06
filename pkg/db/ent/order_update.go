@@ -329,6 +329,18 @@ func (ou *OrderUpdate) ClearState() *OrderUpdate {
 	return ou
 }
 
+// SetCouponIds sets the "coupon_ids" field.
+func (ou *OrderUpdate) SetCouponIds(s []string) *OrderUpdate {
+	ou.mutation.SetCouponIds(s)
+	return ou
+}
+
+// ClearCouponIds clears the value of the "coupon_ids" field.
+func (ou *OrderUpdate) ClearCouponIds() *OrderUpdate {
+	ou.mutation.ClearCouponIds()
+	return ou
+}
+
 // Mutation returns the OrderMutation object of the builder.
 func (ou *OrderUpdate) Mutation() *OrderMutation {
 	return ou.mutation
@@ -646,6 +658,19 @@ func (ou *OrderUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Column: order.FieldState,
+		})
+	}
+	if value, ok := ou.mutation.CouponIds(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeJSON,
+			Value:  value,
+			Column: order.FieldCouponIds,
+		})
+	}
+	if ou.mutation.CouponIdsCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeJSON,
+			Column: order.FieldCouponIds,
 		})
 	}
 	_spec.Modifiers = ou.modifiers
@@ -966,6 +991,18 @@ func (ouo *OrderUpdateOne) SetNillableState(s *string) *OrderUpdateOne {
 // ClearState clears the value of the "state" field.
 func (ouo *OrderUpdateOne) ClearState() *OrderUpdateOne {
 	ouo.mutation.ClearState()
+	return ouo
+}
+
+// SetCouponIds sets the "coupon_ids" field.
+func (ouo *OrderUpdateOne) SetCouponIds(s []string) *OrderUpdateOne {
+	ouo.mutation.SetCouponIds(s)
+	return ouo
+}
+
+// ClearCouponIds clears the value of the "coupon_ids" field.
+func (ouo *OrderUpdateOne) ClearCouponIds() *OrderUpdateOne {
+	ouo.mutation.ClearCouponIds()
 	return ouo
 }
 
@@ -1316,6 +1353,19 @@ func (ouo *OrderUpdateOne) sqlSave(ctx context.Context) (_node *Order, err error
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Column: order.FieldState,
+		})
+	}
+	if value, ok := ouo.mutation.CouponIds(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeJSON,
+			Value:  value,
+			Column: order.FieldCouponIds,
+		})
+	}
+	if ouo.mutation.CouponIdsCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeJSON,
+			Column: order.FieldCouponIds,
 		})
 	}
 	_spec.Modifiers = ouo.modifiers
