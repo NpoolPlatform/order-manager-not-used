@@ -229,6 +229,12 @@ func (oc *OrderCreate) SetNillableState(s *string) *OrderCreate {
 	return oc
 }
 
+// SetCouponIds sets the "coupon_ids" field.
+func (oc *OrderCreate) SetCouponIds(s []string) *OrderCreate {
+	oc.mutation.SetCouponIds(s)
+	return oc
+}
+
 // SetID sets the "id" field.
 func (oc *OrderCreate) SetID(u uuid.UUID) *OrderCreate {
 	oc.mutation.SetID(u)
@@ -397,6 +403,13 @@ func (oc *OrderCreate) defaults() error {
 	if _, ok := oc.mutation.State(); !ok {
 		v := order.DefaultState
 		oc.mutation.SetState(v)
+	}
+	if _, ok := oc.mutation.CouponIds(); !ok {
+		if order.DefaultCouponIds == nil {
+			return fmt.Errorf("ent: uninitialized order.DefaultCouponIds (forgotten import ent/runtime?)")
+		}
+		v := order.DefaultCouponIds()
+		oc.mutation.SetCouponIds(v)
 	}
 	if _, ok := oc.mutation.ID(); !ok {
 		if order.DefaultID == nil {
@@ -603,6 +616,14 @@ func (oc *OrderCreate) createSpec() (*Order, *sqlgraph.CreateSpec) {
 			Column: order.FieldState,
 		})
 		_node.State = value
+	}
+	if value, ok := oc.mutation.CouponIds(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeJSON,
+			Value:  value,
+			Column: order.FieldCouponIds,
+		})
+		_node.CouponIds = value
 	}
 	return _node, _spec
 }
@@ -955,6 +976,24 @@ func (u *OrderUpsert) UpdateState() *OrderUpsert {
 // ClearState clears the value of the "state" field.
 func (u *OrderUpsert) ClearState() *OrderUpsert {
 	u.SetNull(order.FieldState)
+	return u
+}
+
+// SetCouponIds sets the "coupon_ids" field.
+func (u *OrderUpsert) SetCouponIds(v []string) *OrderUpsert {
+	u.Set(order.FieldCouponIds, v)
+	return u
+}
+
+// UpdateCouponIds sets the "coupon_ids" field to the value that was provided on create.
+func (u *OrderUpsert) UpdateCouponIds() *OrderUpsert {
+	u.SetExcluded(order.FieldCouponIds)
+	return u
+}
+
+// ClearCouponIds clears the value of the "coupon_ids" field.
+func (u *OrderUpsert) ClearCouponIds() *OrderUpsert {
+	u.SetNull(order.FieldCouponIds)
 	return u
 }
 
@@ -1355,6 +1394,27 @@ func (u *OrderUpsertOne) UpdateState() *OrderUpsertOne {
 func (u *OrderUpsertOne) ClearState() *OrderUpsertOne {
 	return u.Update(func(s *OrderUpsert) {
 		s.ClearState()
+	})
+}
+
+// SetCouponIds sets the "coupon_ids" field.
+func (u *OrderUpsertOne) SetCouponIds(v []string) *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.SetCouponIds(v)
+	})
+}
+
+// UpdateCouponIds sets the "coupon_ids" field to the value that was provided on create.
+func (u *OrderUpsertOne) UpdateCouponIds() *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.UpdateCouponIds()
+	})
+}
+
+// ClearCouponIds clears the value of the "coupon_ids" field.
+func (u *OrderUpsertOne) ClearCouponIds() *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.ClearCouponIds()
 	})
 }
 
@@ -1921,6 +1981,27 @@ func (u *OrderUpsertBulk) UpdateState() *OrderUpsertBulk {
 func (u *OrderUpsertBulk) ClearState() *OrderUpsertBulk {
 	return u.Update(func(s *OrderUpsert) {
 		s.ClearState()
+	})
+}
+
+// SetCouponIds sets the "coupon_ids" field.
+func (u *OrderUpsertBulk) SetCouponIds(v []string) *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.SetCouponIds(v)
+	})
+}
+
+// UpdateCouponIds sets the "coupon_ids" field to the value that was provided on create.
+func (u *OrderUpsertBulk) UpdateCouponIds() *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.UpdateCouponIds()
+	})
+}
+
+// ClearCouponIds clears the value of the "coupon_ids" field.
+func (u *OrderUpsertBulk) ClearCouponIds() *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.ClearCouponIds()
 	})
 }
 

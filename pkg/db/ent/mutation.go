@@ -934,6 +934,7 @@ type OrderMutation struct {
 	fix_amount_coupon_id      *uuid.UUID
 	_type                     *string
 	state                     *string
+	coupon_ids                *[]string
 	clearedFields             map[string]struct{}
 	done                      bool
 	oldValue                  func(context.Context) (*Order, error)
@@ -1908,6 +1909,55 @@ func (m *OrderMutation) ResetState() {
 	delete(m.clearedFields, order.FieldState)
 }
 
+// SetCouponIds sets the "coupon_ids" field.
+func (m *OrderMutation) SetCouponIds(s []string) {
+	m.coupon_ids = &s
+}
+
+// CouponIds returns the value of the "coupon_ids" field in the mutation.
+func (m *OrderMutation) CouponIds() (r []string, exists bool) {
+	v := m.coupon_ids
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCouponIds returns the old "coupon_ids" field's value of the Order entity.
+// If the Order object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OrderMutation) OldCouponIds(ctx context.Context) (v []string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCouponIds is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCouponIds requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCouponIds: %w", err)
+	}
+	return oldValue.CouponIds, nil
+}
+
+// ClearCouponIds clears the value of the "coupon_ids" field.
+func (m *OrderMutation) ClearCouponIds() {
+	m.coupon_ids = nil
+	m.clearedFields[order.FieldCouponIds] = struct{}{}
+}
+
+// CouponIdsCleared returns if the "coupon_ids" field was cleared in this mutation.
+func (m *OrderMutation) CouponIdsCleared() bool {
+	_, ok := m.clearedFields[order.FieldCouponIds]
+	return ok
+}
+
+// ResetCouponIds resets all changes to the "coupon_ids" field.
+func (m *OrderMutation) ResetCouponIds() {
+	m.coupon_ids = nil
+	delete(m.clearedFields, order.FieldCouponIds)
+}
+
 // Where appends a list predicates to the OrderMutation builder.
 func (m *OrderMutation) Where(ps ...predicate.Order) {
 	m.predicates = append(m.predicates, ps...)
@@ -1927,7 +1977,7 @@ func (m *OrderMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *OrderMutation) Fields() []string {
-	fields := make([]string, 0, 17)
+	fields := make([]string, 0, 18)
 	if m.created_at != nil {
 		fields = append(fields, order.FieldCreatedAt)
 	}
@@ -1979,6 +2029,9 @@ func (m *OrderMutation) Fields() []string {
 	if m.state != nil {
 		fields = append(fields, order.FieldState)
 	}
+	if m.coupon_ids != nil {
+		fields = append(fields, order.FieldCouponIds)
+	}
 	return fields
 }
 
@@ -2021,6 +2074,8 @@ func (m *OrderMutation) Field(name string) (ent.Value, bool) {
 		return m.GetType()
 	case order.FieldState:
 		return m.State()
+	case order.FieldCouponIds:
+		return m.CouponIds()
 	}
 	return nil, false
 }
@@ -2064,6 +2119,8 @@ func (m *OrderMutation) OldField(ctx context.Context, name string) (ent.Value, e
 		return m.OldType(ctx)
 	case order.FieldState:
 		return m.OldState(ctx)
+	case order.FieldCouponIds:
+		return m.OldCouponIds(ctx)
 	}
 	return nil, fmt.Errorf("unknown Order field %s", name)
 }
@@ -2191,6 +2248,13 @@ func (m *OrderMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetState(v)
+		return nil
+	case order.FieldCouponIds:
+		v, ok := value.([]string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCouponIds(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Order field %s", name)
@@ -2327,6 +2391,9 @@ func (m *OrderMutation) ClearedFields() []string {
 	if m.FieldCleared(order.FieldState) {
 		fields = append(fields, order.FieldState)
 	}
+	if m.FieldCleared(order.FieldCouponIds) {
+		fields = append(fields, order.FieldCouponIds)
+	}
 	return fields
 }
 
@@ -2370,6 +2437,9 @@ func (m *OrderMutation) ClearField(name string) error {
 		return nil
 	case order.FieldState:
 		m.ClearState()
+		return nil
+	case order.FieldCouponIds:
+		m.ClearCouponIds()
 		return nil
 	}
 	return fmt.Errorf("unknown Order nullable field %s", name)
@@ -2429,6 +2499,9 @@ func (m *OrderMutation) ResetField(name string) error {
 		return nil
 	case order.FieldState:
 		m.ResetState()
+		return nil
+	case order.FieldCouponIds:
+		m.ResetCouponIds()
 		return nil
 	}
 	return fmt.Errorf("unknown Order field %s", name)

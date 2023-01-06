@@ -45,6 +45,7 @@ var (
 		{Name: "fix_amount_coupon_id", Type: field.TypeUUID, Nullable: true},
 		{Name: "type", Type: field.TypeString, Nullable: true, Default: "DefaultOrderType"},
 		{Name: "state", Type: field.TypeString, Nullable: true, Default: "DefaultState"},
+		{Name: "coupon_ids", Type: field.TypeJSON, Nullable: true},
 	}
 	// OrdersTable holds the schema information for the "orders" table.
 	OrdersTable = &schema.Table{

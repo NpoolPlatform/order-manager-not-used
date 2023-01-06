@@ -3,6 +3,7 @@
 package ent
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 
@@ -50,6 +51,8 @@ type Order struct {
 	Type string `json:"type,omitempty"`
 	// State holds the value of the "state" field.
 	State string `json:"state,omitempty"`
+	// CouponIds holds the value of the "coupon_ids" field.
+	CouponIds []string `json:"coupon_ids,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -57,6 +60,8 @@ func (*Order) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
+		case order.FieldCouponIds:
+			values[i] = new([]byte)
 		case order.FieldPayWithParent:
 			values[i] = new(sql.NullBool)
 		case order.FieldCreatedAt, order.FieldUpdatedAt, order.FieldDeletedAt, order.FieldUnits, order.FieldStartAt, order.FieldEndAt:
@@ -188,6 +193,14 @@ func (o *Order) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				o.State = value.String
 			}
+		case order.FieldCouponIds:
+			if value, ok := values[i].(*[]byte); !ok {
+				return fmt.Errorf("unexpected type %T for field coupon_ids", values[i])
+			} else if value != nil && len(*value) > 0 {
+				if err := json.Unmarshal(*value, &o.CouponIds); err != nil {
+					return fmt.Errorf("unmarshal field coupon_ids: %w", err)
+				}
+			}
 		}
 	}
 	return nil
@@ -266,6 +279,9 @@ func (o *Order) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("state=")
 	builder.WriteString(o.State)
+	builder.WriteString(", ")
+	builder.WriteString("coupon_ids=")
+	builder.WriteString(fmt.Sprintf("%v", o.CouponIds))
 	builder.WriteByte(')')
 	return builder.String()
 }

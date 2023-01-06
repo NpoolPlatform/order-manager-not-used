@@ -1446,6 +1446,20 @@ func StateContainsFold(v string) predicate.Order {
 	})
 }
 
+// CouponIdsIsNil applies the IsNil predicate on the "coupon_ids" field.
+func CouponIdsIsNil() predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldCouponIds)))
+	})
+}
+
+// CouponIdsNotNil applies the NotNil predicate on the "coupon_ids" field.
+func CouponIdsNotNil() predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldCouponIds)))
+	})
+}
+
 // And groups predicates with the AND operator between them.
 func And(predicates ...predicate.Order) predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
