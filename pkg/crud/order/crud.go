@@ -68,6 +68,9 @@ func CreateSet(c *ent.OrderCreate, in *npool.OrderReq) (*ent.OrderCreate, error)
 	if in.State != nil {
 		c.SetState(in.GetState().String())
 	}
+	if in.CouponIDs != nil {
+		c.SetCouponIds(in.GetCouponIDs())
+	}
 	if in.CreatedAt != nil {
 		c.SetCreatedAt(in.GetCreatedAt())
 	}
