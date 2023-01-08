@@ -334,7 +334,9 @@ func SetQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.OrderQuery, error)
 	if conds.CouponID != nil {
 		switch conds.GetCouponID().GetOp() {
 		case cruder.LIKE:
-			// stm.Where(order.CouponIdsContains(uuid.MustParse(conds.GetCouponID().GetValue())))
+			stm.Where(func(selector *sql.Selector) {
+				selector.Where(sqljson.ValueContains(order.FieldCouponIds, conds.GetCouponID().GetValue()))
+			})
 		default:
 			return nil, fmt.Errorf("invalid payment field")
 		}
