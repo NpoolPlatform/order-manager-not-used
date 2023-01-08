@@ -198,6 +198,13 @@ func State(v string) predicate.Order {
 	})
 }
 
+// LastBenefitAt applies equality check predicate on the "last_benefit_at" field. It's identical to LastBenefitAtEQ.
+func LastBenefitAt(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldLastBenefitAt), v))
+	})
+}
+
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
 func CreatedAtEQ(v uint32) predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
@@ -1457,6 +1464,84 @@ func CouponIdsIsNil() predicate.Order {
 func CouponIdsNotNil() predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
 		s.Where(sql.NotNull(s.C(FieldCouponIds)))
+	})
+}
+
+// LastBenefitAtEQ applies the EQ predicate on the "last_benefit_at" field.
+func LastBenefitAtEQ(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldLastBenefitAt), v))
+	})
+}
+
+// LastBenefitAtNEQ applies the NEQ predicate on the "last_benefit_at" field.
+func LastBenefitAtNEQ(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldLastBenefitAt), v))
+	})
+}
+
+// LastBenefitAtIn applies the In predicate on the "last_benefit_at" field.
+func LastBenefitAtIn(vs ...uint32) predicate.Order {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldLastBenefitAt), v...))
+	})
+}
+
+// LastBenefitAtNotIn applies the NotIn predicate on the "last_benefit_at" field.
+func LastBenefitAtNotIn(vs ...uint32) predicate.Order {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldLastBenefitAt), v...))
+	})
+}
+
+// LastBenefitAtGT applies the GT predicate on the "last_benefit_at" field.
+func LastBenefitAtGT(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldLastBenefitAt), v))
+	})
+}
+
+// LastBenefitAtGTE applies the GTE predicate on the "last_benefit_at" field.
+func LastBenefitAtGTE(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldLastBenefitAt), v))
+	})
+}
+
+// LastBenefitAtLT applies the LT predicate on the "last_benefit_at" field.
+func LastBenefitAtLT(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldLastBenefitAt), v))
+	})
+}
+
+// LastBenefitAtLTE applies the LTE predicate on the "last_benefit_at" field.
+func LastBenefitAtLTE(v uint32) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldLastBenefitAt), v))
+	})
+}
+
+// LastBenefitAtIsNil applies the IsNil predicate on the "last_benefit_at" field.
+func LastBenefitAtIsNil() predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldLastBenefitAt)))
+	})
+}
+
+// LastBenefitAtNotNil applies the NotNil predicate on the "last_benefit_at" field.
+func LastBenefitAtNotNil() predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldLastBenefitAt)))
 	})
 }
 

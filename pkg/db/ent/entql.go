@@ -66,6 +66,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			order.FieldType:                   {Type: field.TypeString, Column: order.FieldType},
 			order.FieldState:                  {Type: field.TypeString, Column: order.FieldState},
 			order.FieldCouponIds:              {Type: field.TypeJSON, Column: order.FieldCouponIds},
+			order.FieldLastBenefitAt:          {Type: field.TypeUint32, Column: order.FieldLastBenefitAt},
 		},
 	}
 	graph.Nodes[2] = &sqlgraph.Node{
@@ -333,6 +334,11 @@ func (f *OrderFilter) WhereState(p entql.StringP) {
 // WhereCouponIds applies the entql json.RawMessage predicate on the coupon_ids field.
 func (f *OrderFilter) WhereCouponIds(p entql.BytesP) {
 	f.Where(p.Field(order.FieldCouponIds))
+}
+
+// WhereLastBenefitAt applies the entql uint32 predicate on the last_benefit_at field.
+func (f *OrderFilter) WhereLastBenefitAt(p entql.Uint32P) {
+	f.Where(p.Field(order.FieldLastBenefitAt))
 }
 
 // addPredicate implements the predicateAdder interface.

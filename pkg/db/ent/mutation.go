@@ -935,6 +935,8 @@ type OrderMutation struct {
 	_type                     *string
 	state                     *string
 	coupon_ids                *[]string
+	last_benefit_at           *uint32
+	addlast_benefit_at        *int32
 	clearedFields             map[string]struct{}
 	done                      bool
 	oldValue                  func(context.Context) (*Order, error)
@@ -1958,6 +1960,76 @@ func (m *OrderMutation) ResetCouponIds() {
 	delete(m.clearedFields, order.FieldCouponIds)
 }
 
+// SetLastBenefitAt sets the "last_benefit_at" field.
+func (m *OrderMutation) SetLastBenefitAt(u uint32) {
+	m.last_benefit_at = &u
+	m.addlast_benefit_at = nil
+}
+
+// LastBenefitAt returns the value of the "last_benefit_at" field in the mutation.
+func (m *OrderMutation) LastBenefitAt() (r uint32, exists bool) {
+	v := m.last_benefit_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldLastBenefitAt returns the old "last_benefit_at" field's value of the Order entity.
+// If the Order object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OrderMutation) OldLastBenefitAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldLastBenefitAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldLastBenefitAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldLastBenefitAt: %w", err)
+	}
+	return oldValue.LastBenefitAt, nil
+}
+
+// AddLastBenefitAt adds u to the "last_benefit_at" field.
+func (m *OrderMutation) AddLastBenefitAt(u int32) {
+	if m.addlast_benefit_at != nil {
+		*m.addlast_benefit_at += u
+	} else {
+		m.addlast_benefit_at = &u
+	}
+}
+
+// AddedLastBenefitAt returns the value that was added to the "last_benefit_at" field in this mutation.
+func (m *OrderMutation) AddedLastBenefitAt() (r int32, exists bool) {
+	v := m.addlast_benefit_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ClearLastBenefitAt clears the value of the "last_benefit_at" field.
+func (m *OrderMutation) ClearLastBenefitAt() {
+	m.last_benefit_at = nil
+	m.addlast_benefit_at = nil
+	m.clearedFields[order.FieldLastBenefitAt] = struct{}{}
+}
+
+// LastBenefitAtCleared returns if the "last_benefit_at" field was cleared in this mutation.
+func (m *OrderMutation) LastBenefitAtCleared() bool {
+	_, ok := m.clearedFields[order.FieldLastBenefitAt]
+	return ok
+}
+
+// ResetLastBenefitAt resets all changes to the "last_benefit_at" field.
+func (m *OrderMutation) ResetLastBenefitAt() {
+	m.last_benefit_at = nil
+	m.addlast_benefit_at = nil
+	delete(m.clearedFields, order.FieldLastBenefitAt)
+}
+
 // Where appends a list predicates to the OrderMutation builder.
 func (m *OrderMutation) Where(ps ...predicate.Order) {
 	m.predicates = append(m.predicates, ps...)
@@ -1977,7 +2049,7 @@ func (m *OrderMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *OrderMutation) Fields() []string {
-	fields := make([]string, 0, 18)
+	fields := make([]string, 0, 19)
 	if m.created_at != nil {
 		fields = append(fields, order.FieldCreatedAt)
 	}
@@ -2032,6 +2104,9 @@ func (m *OrderMutation) Fields() []string {
 	if m.coupon_ids != nil {
 		fields = append(fields, order.FieldCouponIds)
 	}
+	if m.last_benefit_at != nil {
+		fields = append(fields, order.FieldLastBenefitAt)
+	}
 	return fields
 }
 
@@ -2076,6 +2151,8 @@ func (m *OrderMutation) Field(name string) (ent.Value, bool) {
 		return m.State()
 	case order.FieldCouponIds:
 		return m.CouponIds()
+	case order.FieldLastBenefitAt:
+		return m.LastBenefitAt()
 	}
 	return nil, false
 }
@@ -2121,6 +2198,8 @@ func (m *OrderMutation) OldField(ctx context.Context, name string) (ent.Value, e
 		return m.OldState(ctx)
 	case order.FieldCouponIds:
 		return m.OldCouponIds(ctx)
+	case order.FieldLastBenefitAt:
+		return m.OldLastBenefitAt(ctx)
 	}
 	return nil, fmt.Errorf("unknown Order field %s", name)
 }
@@ -2256,6 +2335,13 @@ func (m *OrderMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetCouponIds(v)
 		return nil
+	case order.FieldLastBenefitAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetLastBenefitAt(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Order field %s", name)
 }
@@ -2282,6 +2368,9 @@ func (m *OrderMutation) AddedFields() []string {
 	if m.addend_at != nil {
 		fields = append(fields, order.FieldEndAt)
 	}
+	if m.addlast_benefit_at != nil {
+		fields = append(fields, order.FieldLastBenefitAt)
+	}
 	return fields
 }
 
@@ -2302,6 +2391,8 @@ func (m *OrderMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedStartAt()
 	case order.FieldEndAt:
 		return m.AddedEndAt()
+	case order.FieldLastBenefitAt:
+		return m.AddedLastBenefitAt()
 	}
 	return nil, false
 }
@@ -2353,6 +2444,13 @@ func (m *OrderMutation) AddField(name string, value ent.Value) error {
 		}
 		m.AddEndAt(v)
 		return nil
+	case order.FieldLastBenefitAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddLastBenefitAt(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Order numeric field %s", name)
 }
@@ -2393,6 +2491,9 @@ func (m *OrderMutation) ClearedFields() []string {
 	}
 	if m.FieldCleared(order.FieldCouponIds) {
 		fields = append(fields, order.FieldCouponIds)
+	}
+	if m.FieldCleared(order.FieldLastBenefitAt) {
+		fields = append(fields, order.FieldLastBenefitAt)
 	}
 	return fields
 }
@@ -2440,6 +2541,9 @@ func (m *OrderMutation) ClearField(name string) error {
 		return nil
 	case order.FieldCouponIds:
 		m.ClearCouponIds()
+		return nil
+	case order.FieldLastBenefitAt:
+		m.ClearLastBenefitAt()
 		return nil
 	}
 	return fmt.Errorf("unknown Order nullable field %s", name)
@@ -2502,6 +2606,9 @@ func (m *OrderMutation) ResetField(name string) error {
 		return nil
 	case order.FieldCouponIds:
 		m.ResetCouponIds()
+		return nil
+	case order.FieldLastBenefitAt:
+		m.ResetLastBenefitAt()
 		return nil
 	}
 	return fmt.Errorf("unknown Order field %s", name)
