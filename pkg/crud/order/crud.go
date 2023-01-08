@@ -2,11 +2,10 @@ package order
 
 import (
 	"context"
-	"fmt"
-	"time"
-
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqljson"
+	"fmt"
+	"time"
 
 	constant "github.com/NpoolPlatform/order-manager/pkg/message/const"
 	commontracer "github.com/NpoolPlatform/order-manager/pkg/tracer"
@@ -331,18 +330,18 @@ func SetQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.OrderQuery, error)
 			return nil, fmt.Errorf("invalid payment field")
 		}
 	}
-	if conds.CouponIDs != nil {
-		switch conds.GetCouponIDs().GetOp() {
+	if conds.CouponID != nil {
+		switch conds.GetCouponID().GetOp() {
 		case cruder.LIKE:
-			stm.Where(func(selector *sql.Selector) {
-				selector.Where(sqljson.ValueContains(order.FieldCouponIds, conds.GetCouponIDs().GetValue()))
-			})
+			// stm.Where(order.CouponIdsContains(uuid.MustParse(conds.GetCouponID().GetValue())))
 		default:
 			return nil, fmt.Errorf("invalid payment field")
 		}
 	}
 	if len(conds.GetCouponIDs().GetValue()) > 0 {
-		// TODO: support query contains any
+		stm.Where(func(selector *sql.Selector) {
+			selector.Where(sqljson.ValueContains(order.FieldCouponIds, conds.GetCouponIDs().GetValue()))
+		})
 	}
 	return stm, nil
 }
