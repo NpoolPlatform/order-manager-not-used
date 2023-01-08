@@ -343,7 +343,9 @@ func SetQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.OrderQuery, error)
 	}
 	if len(conds.GetCouponIDs().GetValue()) > 0 {
 		stm.Where(func(selector *sql.Selector) {
-			selector.Where(sqljson.ValueContains(order.FieldCouponIds, conds.GetCouponIDs().GetValue()))
+			for _, val := range conds.GetCouponIDs().GetValue() {
+				selector.Or().Where(sqljson.ValueContains(order.FieldCouponIds, val))
+			}
 		})
 	}
 	return stm, nil
@@ -368,6 +370,7 @@ func Rows(ctx context.Context, conds *npool.Conds, offset, limit int) ([]*ent.Or
 	rows := []*ent.Order{}
 	var total int
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
+		cli = cli.Debug()
 		stm, err := SetQueryConds(conds, cli)
 		if err != nil {
 			return err
