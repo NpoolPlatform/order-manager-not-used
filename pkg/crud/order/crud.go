@@ -74,6 +74,7 @@ func CreateSet(c *ent.OrderCreate, in *npool.OrderReq) (*ent.OrderCreate, error)
 	if in.CreatedAt != nil {
 		c.SetCreatedAt(in.GetCreatedAt())
 	}
+	c.SetLastBenefitAt(0)
 
 	return c, nil
 }
@@ -153,6 +154,9 @@ func UpdateSet(u *ent.OrderUpdateOne, in *npool.OrderReq) (*ent.OrderUpdateOne, 
 	}
 	if in.EndAt != nil {
 		u.SetEndAt(in.GetEndAt())
+	}
+	if in.LastBenefitAt != nil {
+		u.SetLastBenefitAt(in.GetLastBenefitAt())
 	}
 	return u, nil
 }
@@ -308,6 +312,14 @@ func SetQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.OrderQuery, error)
 		switch conds.GetUserSpecialReductionID().GetOp() {
 		case cruder.EQ:
 			stm.Where(order.UserSpecialReductionID(uuid.MustParse(conds.GetUserSpecialReductionID().GetValue())))
+		default:
+			return nil, fmt.Errorf("invalid payment field")
+		}
+	}
+	if conds.LastBenefitAt != nil {
+		switch conds.GetLastBenefitAt().GetOp() {
+		case cruder.EQ:
+			stm.Where(order.LastBenefitAt(conds.GetLastBenefitAt().GetValue()))
 		default:
 			return nil, fmt.Errorf("invalid payment field")
 		}

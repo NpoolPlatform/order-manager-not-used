@@ -235,6 +235,20 @@ func (oc *OrderCreate) SetCouponIds(s []string) *OrderCreate {
 	return oc
 }
 
+// SetLastBenefitAt sets the "last_benefit_at" field.
+func (oc *OrderCreate) SetLastBenefitAt(u uint32) *OrderCreate {
+	oc.mutation.SetLastBenefitAt(u)
+	return oc
+}
+
+// SetNillableLastBenefitAt sets the "last_benefit_at" field if the given value is not nil.
+func (oc *OrderCreate) SetNillableLastBenefitAt(u *uint32) *OrderCreate {
+	if u != nil {
+		oc.SetLastBenefitAt(*u)
+	}
+	return oc
+}
+
 // SetID sets the "id" field.
 func (oc *OrderCreate) SetID(u uuid.UUID) *OrderCreate {
 	oc.mutation.SetID(u)
@@ -410,6 +424,10 @@ func (oc *OrderCreate) defaults() error {
 		}
 		v := order.DefaultCouponIds()
 		oc.mutation.SetCouponIds(v)
+	}
+	if _, ok := oc.mutation.LastBenefitAt(); !ok {
+		v := order.DefaultLastBenefitAt
+		oc.mutation.SetLastBenefitAt(v)
 	}
 	if _, ok := oc.mutation.ID(); !ok {
 		if order.DefaultID == nil {
@@ -624,6 +642,14 @@ func (oc *OrderCreate) createSpec() (*Order, *sqlgraph.CreateSpec) {
 			Column: order.FieldCouponIds,
 		})
 		_node.CouponIds = value
+	}
+	if value, ok := oc.mutation.LastBenefitAt(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldLastBenefitAt,
+		})
+		_node.LastBenefitAt = value
 	}
 	return _node, _spec
 }
@@ -994,6 +1020,30 @@ func (u *OrderUpsert) UpdateCouponIds() *OrderUpsert {
 // ClearCouponIds clears the value of the "coupon_ids" field.
 func (u *OrderUpsert) ClearCouponIds() *OrderUpsert {
 	u.SetNull(order.FieldCouponIds)
+	return u
+}
+
+// SetLastBenefitAt sets the "last_benefit_at" field.
+func (u *OrderUpsert) SetLastBenefitAt(v uint32) *OrderUpsert {
+	u.Set(order.FieldLastBenefitAt, v)
+	return u
+}
+
+// UpdateLastBenefitAt sets the "last_benefit_at" field to the value that was provided on create.
+func (u *OrderUpsert) UpdateLastBenefitAt() *OrderUpsert {
+	u.SetExcluded(order.FieldLastBenefitAt)
+	return u
+}
+
+// AddLastBenefitAt adds v to the "last_benefit_at" field.
+func (u *OrderUpsert) AddLastBenefitAt(v uint32) *OrderUpsert {
+	u.Add(order.FieldLastBenefitAt, v)
+	return u
+}
+
+// ClearLastBenefitAt clears the value of the "last_benefit_at" field.
+func (u *OrderUpsert) ClearLastBenefitAt() *OrderUpsert {
+	u.SetNull(order.FieldLastBenefitAt)
 	return u
 }
 
@@ -1415,6 +1465,34 @@ func (u *OrderUpsertOne) UpdateCouponIds() *OrderUpsertOne {
 func (u *OrderUpsertOne) ClearCouponIds() *OrderUpsertOne {
 	return u.Update(func(s *OrderUpsert) {
 		s.ClearCouponIds()
+	})
+}
+
+// SetLastBenefitAt sets the "last_benefit_at" field.
+func (u *OrderUpsertOne) SetLastBenefitAt(v uint32) *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.SetLastBenefitAt(v)
+	})
+}
+
+// AddLastBenefitAt adds v to the "last_benefit_at" field.
+func (u *OrderUpsertOne) AddLastBenefitAt(v uint32) *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.AddLastBenefitAt(v)
+	})
+}
+
+// UpdateLastBenefitAt sets the "last_benefit_at" field to the value that was provided on create.
+func (u *OrderUpsertOne) UpdateLastBenefitAt() *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.UpdateLastBenefitAt()
+	})
+}
+
+// ClearLastBenefitAt clears the value of the "last_benefit_at" field.
+func (u *OrderUpsertOne) ClearLastBenefitAt() *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.ClearLastBenefitAt()
 	})
 }
 
@@ -2002,6 +2080,34 @@ func (u *OrderUpsertBulk) UpdateCouponIds() *OrderUpsertBulk {
 func (u *OrderUpsertBulk) ClearCouponIds() *OrderUpsertBulk {
 	return u.Update(func(s *OrderUpsert) {
 		s.ClearCouponIds()
+	})
+}
+
+// SetLastBenefitAt sets the "last_benefit_at" field.
+func (u *OrderUpsertBulk) SetLastBenefitAt(v uint32) *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.SetLastBenefitAt(v)
+	})
+}
+
+// AddLastBenefitAt adds v to the "last_benefit_at" field.
+func (u *OrderUpsertBulk) AddLastBenefitAt(v uint32) *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.AddLastBenefitAt(v)
+	})
+}
+
+// UpdateLastBenefitAt sets the "last_benefit_at" field to the value that was provided on create.
+func (u *OrderUpsertBulk) UpdateLastBenefitAt() *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.UpdateLastBenefitAt()
+	})
+}
+
+// ClearLastBenefitAt clears the value of the "last_benefit_at" field.
+func (u *OrderUpsertBulk) ClearLastBenefitAt() *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.ClearLastBenefitAt()
 	})
 }
 

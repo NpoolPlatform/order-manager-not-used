@@ -91,6 +91,10 @@ func (Order) Fields() []ent.Field {
 			Default(func() []string {
 				return []string{}
 			}),
+		field.
+			Uint32("last_benefit_at").
+			Optional().
+			Default(0),
 	}
 }
 

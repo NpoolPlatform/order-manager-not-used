@@ -27,6 +27,7 @@ func Ent2Grpc(row *ent.Order) *npool.Order {
 		FixAmountCouponID:      row.FixAmountCouponID.String(),
 		Type:                   npool.OrderType(npool.OrderType_value[row.Type]),
 		State:                  npool.OrderState(npool.OrderState_value[row.State]),
+		LastBenefitAt:          row.LastBenefitAt,
 		CreatedAt:              row.CreatedAt,
 		UpdatedAt:              row.UpdatedAt,
 		DeletedAt:              row.DeletedAt,

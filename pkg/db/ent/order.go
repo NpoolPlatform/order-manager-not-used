@@ -53,6 +53,8 @@ type Order struct {
 	State string `json:"state,omitempty"`
 	// CouponIds holds the value of the "coupon_ids" field.
 	CouponIds []string `json:"coupon_ids,omitempty"`
+	// LastBenefitAt holds the value of the "last_benefit_at" field.
+	LastBenefitAt uint32 `json:"last_benefit_at,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -64,7 +66,7 @@ func (*Order) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new([]byte)
 		case order.FieldPayWithParent:
 			values[i] = new(sql.NullBool)
-		case order.FieldCreatedAt, order.FieldUpdatedAt, order.FieldDeletedAt, order.FieldUnits, order.FieldStartAt, order.FieldEndAt:
+		case order.FieldCreatedAt, order.FieldUpdatedAt, order.FieldDeletedAt, order.FieldUnits, order.FieldStartAt, order.FieldEndAt, order.FieldLastBenefitAt:
 			values[i] = new(sql.NullInt64)
 		case order.FieldType, order.FieldState:
 			values[i] = new(sql.NullString)
@@ -201,6 +203,12 @@ func (o *Order) assignValues(columns []string, values []interface{}) error {
 					return fmt.Errorf("unmarshal field coupon_ids: %w", err)
 				}
 			}
+		case order.FieldLastBenefitAt:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field last_benefit_at", values[i])
+			} else if value.Valid {
+				o.LastBenefitAt = uint32(value.Int64)
+			}
 		}
 	}
 	return nil
@@ -282,6 +290,9 @@ func (o *Order) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("coupon_ids=")
 	builder.WriteString(fmt.Sprintf("%v", o.CouponIds))
+	builder.WriteString(", ")
+	builder.WriteString("last_benefit_at=")
+	builder.WriteString(fmt.Sprintf("%v", o.LastBenefitAt))
 	builder.WriteByte(')')
 	return builder.String()
 }
