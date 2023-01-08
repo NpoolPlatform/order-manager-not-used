@@ -126,7 +126,7 @@ var (
 	// DefaultState holds the default value on creation for the "state" field.
 	DefaultState string
 	// DefaultCouponIds holds the default value on creation for the "coupon_ids" field.
-	DefaultCouponIds func() []string
+	DefaultCouponIds func() []uuid.UUID
 	// DefaultLastBenefitAt holds the default value on creation for the "last_benefit_at" field.
 	DefaultLastBenefitAt uint32
 	// DefaultID holds the default value on creation for the "id" field.

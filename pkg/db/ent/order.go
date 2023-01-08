@@ -52,7 +52,7 @@ type Order struct {
 	// State holds the value of the "state" field.
 	State string `json:"state,omitempty"`
 	// CouponIds holds the value of the "coupon_ids" field.
-	CouponIds []string `json:"coupon_ids,omitempty"`
+	CouponIds []uuid.UUID `json:"coupon_ids,omitempty"`
 	// LastBenefitAt holds the value of the "last_benefit_at" field.
 	LastBenefitAt uint32 `json:"last_benefit_at,omitempty"`
 }

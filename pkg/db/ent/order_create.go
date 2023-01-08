@@ -230,8 +230,8 @@ func (oc *OrderCreate) SetNillableState(s *string) *OrderCreate {
 }
 
 // SetCouponIds sets the "coupon_ids" field.
-func (oc *OrderCreate) SetCouponIds(s []string) *OrderCreate {
-	oc.mutation.SetCouponIds(s)
+func (oc *OrderCreate) SetCouponIds(u []uuid.UUID) *OrderCreate {
+	oc.mutation.SetCouponIds(u)
 	return oc
 }
 
@@ -1006,7 +1006,7 @@ func (u *OrderUpsert) ClearState() *OrderUpsert {
 }
 
 // SetCouponIds sets the "coupon_ids" field.
-func (u *OrderUpsert) SetCouponIds(v []string) *OrderUpsert {
+func (u *OrderUpsert) SetCouponIds(v []uuid.UUID) *OrderUpsert {
 	u.Set(order.FieldCouponIds, v)
 	return u
 }
@@ -1448,7 +1448,7 @@ func (u *OrderUpsertOne) ClearState() *OrderUpsertOne {
 }
 
 // SetCouponIds sets the "coupon_ids" field.
-func (u *OrderUpsertOne) SetCouponIds(v []string) *OrderUpsertOne {
+func (u *OrderUpsertOne) SetCouponIds(v []uuid.UUID) *OrderUpsertOne {
 	return u.Update(func(s *OrderUpsert) {
 		s.SetCouponIds(v)
 	})
@@ -2063,7 +2063,7 @@ func (u *OrderUpsertBulk) ClearState() *OrderUpsertBulk {
 }
 
 // SetCouponIds sets the "coupon_ids" field.
-func (u *OrderUpsertBulk) SetCouponIds(v []string) *OrderUpsertBulk {
+func (u *OrderUpsertBulk) SetCouponIds(v []uuid.UUID) *OrderUpsertBulk {
 	return u.Update(func(s *OrderUpsert) {
 		s.SetCouponIds(v)
 	})

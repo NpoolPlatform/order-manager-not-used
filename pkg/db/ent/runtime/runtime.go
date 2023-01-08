@@ -136,7 +136,7 @@ func init() {
 	// orderDescCouponIds is the schema descriptor for coupon_ids field.
 	orderDescCouponIds := orderFields[15].Descriptor()
 	// order.DefaultCouponIds holds the default value on creation for the coupon_ids field.
-	order.DefaultCouponIds = orderDescCouponIds.Default.(func() []string)
+	order.DefaultCouponIds = orderDescCouponIds.Default.(func() []uuid.UUID)
 	// orderDescLastBenefitAt is the schema descriptor for last_benefit_at field.
 	orderDescLastBenefitAt := orderFields[16].Descriptor()
 	// order.DefaultLastBenefitAt holds the default value on creation for the last_benefit_at field.

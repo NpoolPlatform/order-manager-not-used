@@ -69,7 +69,11 @@ func CreateSet(c *ent.OrderCreate, in *npool.OrderReq) (*ent.OrderCreate, error)
 		c.SetState(in.GetState().String())
 	}
 	if in.CouponIDs != nil {
-		c.SetCouponIds(in.GetCouponIDs())
+		ids := []uuid.UUID{}
+		for _, id := range in.GetCouponIDs() {
+			ids = append(ids, uuid.MustParse(id))
+		}
+		c.SetCouponIds(ids)
 	}
 	if in.CreatedAt != nil {
 		c.SetCreatedAt(in.GetCreatedAt())
