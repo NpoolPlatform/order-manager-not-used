@@ -328,6 +328,17 @@ func SetQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.OrderQuery, error)
 			return nil, fmt.Errorf("invalid payment field")
 		}
 	}
+	if conds.CouponID != nil {
+		switch conds.GetCouponID().GetOp() {
+		case cruder.LIKE:
+			// stm.Where(order.CouponIdsContains(uuid.MustParse(conds.GetCouponID().GetValue())))
+		default:
+			return nil, fmt.Errorf("invalid payment field")
+		}
+	}
+	if len(conds.GetCouponIDs().GetValue()) > 0 {
+		// TODO: support query contains any
+	}
 	return stm, nil
 }
 
