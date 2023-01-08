@@ -330,8 +330,8 @@ func (ou *OrderUpdate) ClearState() *OrderUpdate {
 }
 
 // SetCouponIds sets the "coupon_ids" field.
-func (ou *OrderUpdate) SetCouponIds(s []string) *OrderUpdate {
-	ou.mutation.SetCouponIds(s)
+func (ou *OrderUpdate) SetCouponIds(u []uuid.UUID) *OrderUpdate {
+	ou.mutation.SetCouponIds(u)
 	return ou
 }
 
@@ -1042,8 +1042,8 @@ func (ouo *OrderUpdateOne) ClearState() *OrderUpdateOne {
 }
 
 // SetCouponIds sets the "coupon_ids" field.
-func (ouo *OrderUpdateOne) SetCouponIds(s []string) *OrderUpdateOne {
-	ouo.mutation.SetCouponIds(s)
+func (ouo *OrderUpdateOne) SetCouponIds(u []uuid.UUID) *OrderUpdateOne {
+	ouo.mutation.SetCouponIds(u)
 	return ouo
 }
 

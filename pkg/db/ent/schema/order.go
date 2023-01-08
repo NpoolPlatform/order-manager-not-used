@@ -86,10 +86,10 @@ func (Order) Fields() []ent.Field {
 			Optional().
 			Default(order.OrderState_DefaultState.String()),
 		field.
-			JSON("coupon_ids", []string{}).
+			JSON("coupon_ids", []uuid.UUID{}).
 			Optional().
-			Default(func() []string {
-				return []string{}
+			Default(func() []uuid.UUID {
+				return []uuid.UUID{}
 			}),
 		field.
 			Uint32("last_benefit_at").

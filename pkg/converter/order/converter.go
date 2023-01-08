@@ -11,6 +11,11 @@ func Ent2Grpc(row *ent.Order) *npool.Order {
 		return nil
 	}
 
+	ids := []string{}
+	for _, id := range row.CouponIds {
+		ids = append(ids, id.String())
+	}
+
 	return &npool.Order{
 		ID:                     row.ID.String(),
 		GoodID:                 row.GoodID.String(),
@@ -27,6 +32,7 @@ func Ent2Grpc(row *ent.Order) *npool.Order {
 		FixAmountCouponID:      row.FixAmountCouponID.String(),
 		Type:                   npool.OrderType(npool.OrderType_value[row.Type]),
 		State:                  npool.OrderState(npool.OrderState_value[row.State]),
+		CouponIDs:              ids,
 		LastBenefitAt:          row.LastBenefitAt,
 		CreatedAt:              row.CreatedAt,
 		UpdatedAt:              row.UpdatedAt,

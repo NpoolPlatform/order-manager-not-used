@@ -934,7 +934,7 @@ type OrderMutation struct {
 	fix_amount_coupon_id      *uuid.UUID
 	_type                     *string
 	state                     *string
-	coupon_ids                *[]string
+	coupon_ids                *[]uuid.UUID
 	last_benefit_at           *uint32
 	addlast_benefit_at        *int32
 	clearedFields             map[string]struct{}
@@ -1912,12 +1912,12 @@ func (m *OrderMutation) ResetState() {
 }
 
 // SetCouponIds sets the "coupon_ids" field.
-func (m *OrderMutation) SetCouponIds(s []string) {
-	m.coupon_ids = &s
+func (m *OrderMutation) SetCouponIds(u []uuid.UUID) {
+	m.coupon_ids = &u
 }
 
 // CouponIds returns the value of the "coupon_ids" field in the mutation.
-func (m *OrderMutation) CouponIds() (r []string, exists bool) {
+func (m *OrderMutation) CouponIds() (r []uuid.UUID, exists bool) {
 	v := m.coupon_ids
 	if v == nil {
 		return
@@ -1928,7 +1928,7 @@ func (m *OrderMutation) CouponIds() (r []string, exists bool) {
 // OldCouponIds returns the old "coupon_ids" field's value of the Order entity.
 // If the Order object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *OrderMutation) OldCouponIds(ctx context.Context) (v []string, err error) {
+func (m *OrderMutation) OldCouponIds(ctx context.Context) (v []uuid.UUID, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldCouponIds is only allowed on UpdateOne operations")
 	}
@@ -2329,7 +2329,7 @@ func (m *OrderMutation) SetField(name string, value ent.Value) error {
 		m.SetState(v)
 		return nil
 	case order.FieldCouponIds:
-		v, ok := value.([]string)
+		v, ok := value.([]uuid.UUID)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
