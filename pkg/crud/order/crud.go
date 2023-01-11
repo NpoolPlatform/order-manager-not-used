@@ -5,6 +5,9 @@ import (
 	"fmt"
 	"time"
 
+	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqljson"
+
 	constant "github.com/NpoolPlatform/order-manager/pkg/message/const"
 	commontracer "github.com/NpoolPlatform/order-manager/pkg/tracer"
 	tracer "github.com/NpoolPlatform/order-manager/pkg/tracer/order"
@@ -68,9 +71,17 @@ func CreateSet(c *ent.OrderCreate, in *npool.OrderReq) (*ent.OrderCreate, error)
 	if in.State != nil {
 		c.SetState(in.GetState().String())
 	}
+	if in.CouponIDs != nil {
+		ids := []uuid.UUID{}
+		for _, id := range in.GetCouponIDs() {
+			ids = append(ids, uuid.MustParse(id))
+		}
+		c.SetCouponIds(ids)
+	}
 	if in.CreatedAt != nil {
 		c.SetCreatedAt(in.GetCreatedAt())
 	}
+	c.SetLastBenefitAt(0)
 
 	return c, nil
 }
@@ -150,6 +161,9 @@ func UpdateSet(u *ent.OrderUpdateOne, in *npool.OrderReq) (*ent.OrderUpdateOne, 
 	}
 	if in.EndAt != nil {
 		u.SetEndAt(in.GetEndAt())
+	}
+	if in.LastBenefitAt != nil {
+		u.SetLastBenefitAt(in.GetLastBenefitAt())
 	}
 	return u, nil
 }
@@ -309,6 +323,31 @@ func SetQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.OrderQuery, error)
 			return nil, fmt.Errorf("invalid payment field")
 		}
 	}
+	if conds.LastBenefitAt != nil {
+		switch conds.GetLastBenefitAt().GetOp() {
+		case cruder.EQ:
+			stm.Where(order.LastBenefitAt(conds.GetLastBenefitAt().GetValue()))
+		default:
+			return nil, fmt.Errorf("invalid payment field")
+		}
+	}
+	if conds.CouponID != nil {
+		switch conds.GetCouponID().GetOp() {
+		case cruder.LIKE:
+			stm.Where(func(selector *sql.Selector) {
+				selector.Where(sqljson.ValueContains(order.FieldCouponIds, conds.GetCouponID().GetValue()))
+			})
+		default:
+			return nil, fmt.Errorf("invalid payment field")
+		}
+	}
+	if len(conds.GetCouponIDs().GetValue()) > 0 {
+		stm.Where(func(selector *sql.Selector) {
+			for _, val := range conds.GetCouponIDs().GetValue() {
+				selector.Or().Where(sqljson.ValueContains(order.FieldCouponIds, val))
+			}
+		})
+	}
 	return stm, nil
 }
 
@@ -331,6 +370,7 @@ func Rows(ctx context.Context, conds *npool.Conds, offset, limit int) ([]*ent.Or
 	rows := []*ent.Order{}
 	var total int
 	err = db.WithClient(ctx, func(_ctx context.Context, cli *ent.Client) error {
+		cli = cli.Debug()
 		stm, err := SetQueryConds(conds, cli)
 		if err != nil {
 			return err

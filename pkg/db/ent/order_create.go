@@ -229,6 +229,26 @@ func (oc *OrderCreate) SetNillableState(s *string) *OrderCreate {
 	return oc
 }
 
+// SetCouponIds sets the "coupon_ids" field.
+func (oc *OrderCreate) SetCouponIds(u []uuid.UUID) *OrderCreate {
+	oc.mutation.SetCouponIds(u)
+	return oc
+}
+
+// SetLastBenefitAt sets the "last_benefit_at" field.
+func (oc *OrderCreate) SetLastBenefitAt(u uint32) *OrderCreate {
+	oc.mutation.SetLastBenefitAt(u)
+	return oc
+}
+
+// SetNillableLastBenefitAt sets the "last_benefit_at" field if the given value is not nil.
+func (oc *OrderCreate) SetNillableLastBenefitAt(u *uint32) *OrderCreate {
+	if u != nil {
+		oc.SetLastBenefitAt(*u)
+	}
+	return oc
+}
+
 // SetID sets the "id" field.
 func (oc *OrderCreate) SetID(u uuid.UUID) *OrderCreate {
 	oc.mutation.SetID(u)
@@ -397,6 +417,17 @@ func (oc *OrderCreate) defaults() error {
 	if _, ok := oc.mutation.State(); !ok {
 		v := order.DefaultState
 		oc.mutation.SetState(v)
+	}
+	if _, ok := oc.mutation.CouponIds(); !ok {
+		if order.DefaultCouponIds == nil {
+			return fmt.Errorf("ent: uninitialized order.DefaultCouponIds (forgotten import ent/runtime?)")
+		}
+		v := order.DefaultCouponIds()
+		oc.mutation.SetCouponIds(v)
+	}
+	if _, ok := oc.mutation.LastBenefitAt(); !ok {
+		v := order.DefaultLastBenefitAt
+		oc.mutation.SetLastBenefitAt(v)
 	}
 	if _, ok := oc.mutation.ID(); !ok {
 		if order.DefaultID == nil {
@@ -603,6 +634,22 @@ func (oc *OrderCreate) createSpec() (*Order, *sqlgraph.CreateSpec) {
 			Column: order.FieldState,
 		})
 		_node.State = value
+	}
+	if value, ok := oc.mutation.CouponIds(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeJSON,
+			Value:  value,
+			Column: order.FieldCouponIds,
+		})
+		_node.CouponIds = value
+	}
+	if value, ok := oc.mutation.LastBenefitAt(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: order.FieldLastBenefitAt,
+		})
+		_node.LastBenefitAt = value
 	}
 	return _node, _spec
 }
@@ -955,6 +1002,48 @@ func (u *OrderUpsert) UpdateState() *OrderUpsert {
 // ClearState clears the value of the "state" field.
 func (u *OrderUpsert) ClearState() *OrderUpsert {
 	u.SetNull(order.FieldState)
+	return u
+}
+
+// SetCouponIds sets the "coupon_ids" field.
+func (u *OrderUpsert) SetCouponIds(v []uuid.UUID) *OrderUpsert {
+	u.Set(order.FieldCouponIds, v)
+	return u
+}
+
+// UpdateCouponIds sets the "coupon_ids" field to the value that was provided on create.
+func (u *OrderUpsert) UpdateCouponIds() *OrderUpsert {
+	u.SetExcluded(order.FieldCouponIds)
+	return u
+}
+
+// ClearCouponIds clears the value of the "coupon_ids" field.
+func (u *OrderUpsert) ClearCouponIds() *OrderUpsert {
+	u.SetNull(order.FieldCouponIds)
+	return u
+}
+
+// SetLastBenefitAt sets the "last_benefit_at" field.
+func (u *OrderUpsert) SetLastBenefitAt(v uint32) *OrderUpsert {
+	u.Set(order.FieldLastBenefitAt, v)
+	return u
+}
+
+// UpdateLastBenefitAt sets the "last_benefit_at" field to the value that was provided on create.
+func (u *OrderUpsert) UpdateLastBenefitAt() *OrderUpsert {
+	u.SetExcluded(order.FieldLastBenefitAt)
+	return u
+}
+
+// AddLastBenefitAt adds v to the "last_benefit_at" field.
+func (u *OrderUpsert) AddLastBenefitAt(v uint32) *OrderUpsert {
+	u.Add(order.FieldLastBenefitAt, v)
+	return u
+}
+
+// ClearLastBenefitAt clears the value of the "last_benefit_at" field.
+func (u *OrderUpsert) ClearLastBenefitAt() *OrderUpsert {
+	u.SetNull(order.FieldLastBenefitAt)
 	return u
 }
 
@@ -1355,6 +1444,55 @@ func (u *OrderUpsertOne) UpdateState() *OrderUpsertOne {
 func (u *OrderUpsertOne) ClearState() *OrderUpsertOne {
 	return u.Update(func(s *OrderUpsert) {
 		s.ClearState()
+	})
+}
+
+// SetCouponIds sets the "coupon_ids" field.
+func (u *OrderUpsertOne) SetCouponIds(v []uuid.UUID) *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.SetCouponIds(v)
+	})
+}
+
+// UpdateCouponIds sets the "coupon_ids" field to the value that was provided on create.
+func (u *OrderUpsertOne) UpdateCouponIds() *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.UpdateCouponIds()
+	})
+}
+
+// ClearCouponIds clears the value of the "coupon_ids" field.
+func (u *OrderUpsertOne) ClearCouponIds() *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.ClearCouponIds()
+	})
+}
+
+// SetLastBenefitAt sets the "last_benefit_at" field.
+func (u *OrderUpsertOne) SetLastBenefitAt(v uint32) *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.SetLastBenefitAt(v)
+	})
+}
+
+// AddLastBenefitAt adds v to the "last_benefit_at" field.
+func (u *OrderUpsertOne) AddLastBenefitAt(v uint32) *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.AddLastBenefitAt(v)
+	})
+}
+
+// UpdateLastBenefitAt sets the "last_benefit_at" field to the value that was provided on create.
+func (u *OrderUpsertOne) UpdateLastBenefitAt() *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.UpdateLastBenefitAt()
+	})
+}
+
+// ClearLastBenefitAt clears the value of the "last_benefit_at" field.
+func (u *OrderUpsertOne) ClearLastBenefitAt() *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.ClearLastBenefitAt()
 	})
 }
 
@@ -1921,6 +2059,55 @@ func (u *OrderUpsertBulk) UpdateState() *OrderUpsertBulk {
 func (u *OrderUpsertBulk) ClearState() *OrderUpsertBulk {
 	return u.Update(func(s *OrderUpsert) {
 		s.ClearState()
+	})
+}
+
+// SetCouponIds sets the "coupon_ids" field.
+func (u *OrderUpsertBulk) SetCouponIds(v []uuid.UUID) *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.SetCouponIds(v)
+	})
+}
+
+// UpdateCouponIds sets the "coupon_ids" field to the value that was provided on create.
+func (u *OrderUpsertBulk) UpdateCouponIds() *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.UpdateCouponIds()
+	})
+}
+
+// ClearCouponIds clears the value of the "coupon_ids" field.
+func (u *OrderUpsertBulk) ClearCouponIds() *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.ClearCouponIds()
+	})
+}
+
+// SetLastBenefitAt sets the "last_benefit_at" field.
+func (u *OrderUpsertBulk) SetLastBenefitAt(v uint32) *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.SetLastBenefitAt(v)
+	})
+}
+
+// AddLastBenefitAt adds v to the "last_benefit_at" field.
+func (u *OrderUpsertBulk) AddLastBenefitAt(v uint32) *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.AddLastBenefitAt(v)
+	})
+}
+
+// UpdateLastBenefitAt sets the "last_benefit_at" field to the value that was provided on create.
+func (u *OrderUpsertBulk) UpdateLastBenefitAt() *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.UpdateLastBenefitAt()
+	})
+}
+
+// ClearLastBenefitAt clears the value of the "last_benefit_at" field.
+func (u *OrderUpsertBulk) ClearLastBenefitAt() *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.ClearLastBenefitAt()
 	})
 }
 
