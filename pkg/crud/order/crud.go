@@ -343,8 +343,13 @@ func SetQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.OrderQuery, error)
 	}
 	if len(conds.GetCouponIDs().GetValue()) > 0 {
 		stm.Where(func(selector *sql.Selector) {
-			for _, val := range conds.GetCouponIDs().GetValue() {
-				selector.Or().Where(sqljson.ValueContains(order.FieldCouponIds, val))
+			vals := conds.GetCouponIDs().GetValue()
+			for i := 0; i < len(vals); i++ {
+				if i == 0 {
+					selector.Where(sqljson.ValueContains(order.FieldCouponIds, vals[i]))
+				} else {
+					selector.Or().Where(sqljson.ValueContains(order.FieldCouponIds, vals[i]))
+				}
 			}
 		})
 	}
