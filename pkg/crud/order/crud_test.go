@@ -9,6 +9,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/shopspring/decimal"
+
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	"github.com/NpoolPlatform/order-manager/pkg/db/ent"
 
@@ -37,7 +39,8 @@ var appGood = ent.Order{
 	UserID:                 uuid.New(),
 	ParentOrderID:          uuid.New(),
 	PayWithParent:          true,
-	Units:                  100,
+	UnitsV1:                decimal.NewFromInt(100),
+	Units:                  0,
 	PromotionID:            uuid.New(),
 	DiscountCouponID:       uuid.New(),
 	UserSpecialReductionID: uuid.New(),
@@ -60,6 +63,7 @@ var (
 	couponID               = appGood.FixAmountCouponID.String()
 	tp                     = npool.OrderType_Airdrop
 	state                  = npool.OrderState_InService
+	units                  = appGood.UnitsV1.String()
 	req                    = npool.OrderReq{
 		ID:                     &id,
 		GoodID:                 &orderID,
@@ -67,7 +71,7 @@ var (
 		UserID:                 &userID,
 		ParentOrderID:          &parentOrderID,
 		PayWithParent:          &appGood.PayWithParent,
-		Units:                  &appGood.Units,
+		Units:                  &units,
 		PromotionID:            &promotionID,
 		DiscountCouponID:       &discountCouponID,
 		UserSpecialReductionID: &userSpecialReductionID,
@@ -100,7 +104,8 @@ func createBulk(t *testing.T) {
 			UserID:                 uuid.New(),
 			ParentOrderID:          uuid.New(),
 			PayWithParent:          true,
-			Units:                  100,
+			UnitsV1:                decimal.NewFromInt(100),
+			Units:                  0,
 			PromotionID:            uuid.New(),
 			DiscountCouponID:       uuid.New(),
 			UserSpecialReductionID: uuid.New(),
@@ -117,7 +122,8 @@ func createBulk(t *testing.T) {
 			UserID:                 uuid.New(),
 			ParentOrderID:          uuid.New(),
 			PayWithParent:          true,
-			Units:                  100,
+			UnitsV1:                decimal.NewFromInt(100),
+			Units:                  0,
 			PromotionID:            uuid.New(),
 			DiscountCouponID:       uuid.New(),
 			UserSpecialReductionID: uuid.New(),
@@ -142,6 +148,7 @@ func createBulk(t *testing.T) {
 		_couponID := _appGood.FixAmountCouponID.String()
 		_tp := npool.OrderType_Airdrop
 		_state := npool.OrderState_InService
+		_units := appGood.UnitsV1.String()
 		reqs = append(reqs, &npool.OrderReq{
 			ID:                     &_id,
 			GoodID:                 &_orderID,
@@ -149,7 +156,7 @@ func createBulk(t *testing.T) {
 			UserID:                 &_userID,
 			ParentOrderID:          &_parentOrderID,
 			PayWithParent:          &_appGood.PayWithParent,
-			Units:                  &_appGood.Units,
+			Units:                  &_units,
 			PromotionID:            &_promotionID,
 			DiscountCouponID:       &_discountCouponID,
 			UserSpecialReductionID: &_userSpecialReductionID,

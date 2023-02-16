@@ -13,6 +13,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/order-manager/pkg/db/ent/order"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // OrderCreate is the builder for creating a Order entity.
@@ -114,6 +115,28 @@ func (oc *OrderCreate) SetNillablePayWithParent(b *bool) *OrderCreate {
 // SetUnits sets the "units" field.
 func (oc *OrderCreate) SetUnits(u uint32) *OrderCreate {
 	oc.mutation.SetUnits(u)
+	return oc
+}
+
+// SetNillableUnits sets the "units" field if the given value is not nil.
+func (oc *OrderCreate) SetNillableUnits(u *uint32) *OrderCreate {
+	if u != nil {
+		oc.SetUnits(*u)
+	}
+	return oc
+}
+
+// SetUnitsV1 sets the "units_v1" field.
+func (oc *OrderCreate) SetUnitsV1(d decimal.Decimal) *OrderCreate {
+	oc.mutation.SetUnitsV1(d)
+	return oc
+}
+
+// SetNillableUnitsV1 sets the "units_v1" field if the given value is not nil.
+func (oc *OrderCreate) SetNillableUnitsV1(d *decimal.Decimal) *OrderCreate {
+	if d != nil {
+		oc.SetUnitsV1(*d)
+	}
 	return oc
 }
 
@@ -374,6 +397,14 @@ func (oc *OrderCreate) defaults() error {
 		v := order.DefaultPayWithParent
 		oc.mutation.SetPayWithParent(v)
 	}
+	if _, ok := oc.mutation.Units(); !ok {
+		v := order.DefaultUnits
+		oc.mutation.SetUnits(v)
+	}
+	if _, ok := oc.mutation.UnitsV1(); !ok {
+		v := order.DefaultUnitsV1
+		oc.mutation.SetUnitsV1(v)
+	}
 	if _, ok := oc.mutation.PromotionID(); !ok {
 		if order.DefaultPromotionID == nil {
 			return fmt.Errorf("ent: uninitialized order.DefaultPromotionID (forgotten import ent/runtime?)")
@@ -458,9 +489,6 @@ func (oc *OrderCreate) check() error {
 	}
 	if _, ok := oc.mutation.UserID(); !ok {
 		return &ValidationError{Name: "user_id", err: errors.New(`ent: missing required field "Order.user_id"`)}
-	}
-	if _, ok := oc.mutation.Units(); !ok {
-		return &ValidationError{Name: "units", err: errors.New(`ent: missing required field "Order.units"`)}
 	}
 	return nil
 }
@@ -570,6 +598,14 @@ func (oc *OrderCreate) createSpec() (*Order, *sqlgraph.CreateSpec) {
 			Column: order.FieldUnits,
 		})
 		_node.Units = value
+	}
+	if value, ok := oc.mutation.UnitsV1(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: order.FieldUnitsV1,
+		})
+		_node.UnitsV1 = value
 	}
 	if value, ok := oc.mutation.PromotionID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -846,6 +882,30 @@ func (u *OrderUpsert) UpdateUnits() *OrderUpsert {
 // AddUnits adds v to the "units" field.
 func (u *OrderUpsert) AddUnits(v uint32) *OrderUpsert {
 	u.Add(order.FieldUnits, v)
+	return u
+}
+
+// ClearUnits clears the value of the "units" field.
+func (u *OrderUpsert) ClearUnits() *OrderUpsert {
+	u.SetNull(order.FieldUnits)
+	return u
+}
+
+// SetUnitsV1 sets the "units_v1" field.
+func (u *OrderUpsert) SetUnitsV1(v decimal.Decimal) *OrderUpsert {
+	u.Set(order.FieldUnitsV1, v)
+	return u
+}
+
+// UpdateUnitsV1 sets the "units_v1" field to the value that was provided on create.
+func (u *OrderUpsert) UpdateUnitsV1() *OrderUpsert {
+	u.SetExcluded(order.FieldUnitsV1)
+	return u
+}
+
+// ClearUnitsV1 clears the value of the "units_v1" field.
+func (u *OrderUpsert) ClearUnitsV1() *OrderUpsert {
+	u.SetNull(order.FieldUnitsV1)
 	return u
 }
 
@@ -1262,6 +1322,34 @@ func (u *OrderUpsertOne) AddUnits(v uint32) *OrderUpsertOne {
 func (u *OrderUpsertOne) UpdateUnits() *OrderUpsertOne {
 	return u.Update(func(s *OrderUpsert) {
 		s.UpdateUnits()
+	})
+}
+
+// ClearUnits clears the value of the "units" field.
+func (u *OrderUpsertOne) ClearUnits() *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.ClearUnits()
+	})
+}
+
+// SetUnitsV1 sets the "units_v1" field.
+func (u *OrderUpsertOne) SetUnitsV1(v decimal.Decimal) *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.SetUnitsV1(v)
+	})
+}
+
+// UpdateUnitsV1 sets the "units_v1" field to the value that was provided on create.
+func (u *OrderUpsertOne) UpdateUnitsV1() *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.UpdateUnitsV1()
+	})
+}
+
+// ClearUnitsV1 clears the value of the "units_v1" field.
+func (u *OrderUpsertOne) ClearUnitsV1() *OrderUpsertOne {
+	return u.Update(func(s *OrderUpsert) {
+		s.ClearUnitsV1()
 	})
 }
 
@@ -1877,6 +1965,34 @@ func (u *OrderUpsertBulk) AddUnits(v uint32) *OrderUpsertBulk {
 func (u *OrderUpsertBulk) UpdateUnits() *OrderUpsertBulk {
 	return u.Update(func(s *OrderUpsert) {
 		s.UpdateUnits()
+	})
+}
+
+// ClearUnits clears the value of the "units" field.
+func (u *OrderUpsertBulk) ClearUnits() *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.ClearUnits()
+	})
+}
+
+// SetUnitsV1 sets the "units_v1" field.
+func (u *OrderUpsertBulk) SetUnitsV1(v decimal.Decimal) *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.SetUnitsV1(v)
+	})
+}
+
+// UpdateUnitsV1 sets the "units_v1" field to the value that was provided on create.
+func (u *OrderUpsertBulk) UpdateUnitsV1() *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.UpdateUnitsV1()
+	})
+}
+
+// ClearUnitsV1 clears the value of the "units_v1" field.
+func (u *OrderUpsertBulk) ClearUnitsV1() *OrderUpsertBulk {
+	return u.Update(func(s *OrderUpsert) {
+		s.ClearUnitsV1()
 	})
 }
 

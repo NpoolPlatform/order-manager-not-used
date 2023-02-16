@@ -13,6 +13,7 @@ import (
 	"github.com/NpoolPlatform/order-manager/pkg/db/ent/order"
 	"github.com/NpoolPlatform/order-manager/pkg/db/ent/predicate"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // OrderUpdate is the builder for updating Order entities.
@@ -149,9 +150,43 @@ func (ou *OrderUpdate) SetUnits(u uint32) *OrderUpdate {
 	return ou
 }
 
+// SetNillableUnits sets the "units" field if the given value is not nil.
+func (ou *OrderUpdate) SetNillableUnits(u *uint32) *OrderUpdate {
+	if u != nil {
+		ou.SetUnits(*u)
+	}
+	return ou
+}
+
 // AddUnits adds u to the "units" field.
 func (ou *OrderUpdate) AddUnits(u int32) *OrderUpdate {
 	ou.mutation.AddUnits(u)
+	return ou
+}
+
+// ClearUnits clears the value of the "units" field.
+func (ou *OrderUpdate) ClearUnits() *OrderUpdate {
+	ou.mutation.ClearUnits()
+	return ou
+}
+
+// SetUnitsV1 sets the "units_v1" field.
+func (ou *OrderUpdate) SetUnitsV1(d decimal.Decimal) *OrderUpdate {
+	ou.mutation.SetUnitsV1(d)
+	return ou
+}
+
+// SetNillableUnitsV1 sets the "units_v1" field if the given value is not nil.
+func (ou *OrderUpdate) SetNillableUnitsV1(d *decimal.Decimal) *OrderUpdate {
+	if d != nil {
+		ou.SetUnitsV1(*d)
+	}
+	return ou
+}
+
+// ClearUnitsV1 clears the value of the "units_v1" field.
+func (ou *OrderUpdate) ClearUnitsV1() *OrderUpdate {
+	ou.mutation.ClearUnitsV1()
 	return ou
 }
 
@@ -569,6 +604,25 @@ func (ou *OrderUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: order.FieldUnits,
 		})
 	}
+	if ou.mutation.UnitsCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Column: order.FieldUnits,
+		})
+	}
+	if value, ok := ou.mutation.UnitsV1(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: order.FieldUnitsV1,
+		})
+	}
+	if ou.mutation.UnitsV1Cleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Column: order.FieldUnitsV1,
+		})
+	}
 	if value, ok := ou.mutation.PromotionID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeUUID,
@@ -861,9 +915,43 @@ func (ouo *OrderUpdateOne) SetUnits(u uint32) *OrderUpdateOne {
 	return ouo
 }
 
+// SetNillableUnits sets the "units" field if the given value is not nil.
+func (ouo *OrderUpdateOne) SetNillableUnits(u *uint32) *OrderUpdateOne {
+	if u != nil {
+		ouo.SetUnits(*u)
+	}
+	return ouo
+}
+
 // AddUnits adds u to the "units" field.
 func (ouo *OrderUpdateOne) AddUnits(u int32) *OrderUpdateOne {
 	ouo.mutation.AddUnits(u)
+	return ouo
+}
+
+// ClearUnits clears the value of the "units" field.
+func (ouo *OrderUpdateOne) ClearUnits() *OrderUpdateOne {
+	ouo.mutation.ClearUnits()
+	return ouo
+}
+
+// SetUnitsV1 sets the "units_v1" field.
+func (ouo *OrderUpdateOne) SetUnitsV1(d decimal.Decimal) *OrderUpdateOne {
+	ouo.mutation.SetUnitsV1(d)
+	return ouo
+}
+
+// SetNillableUnitsV1 sets the "units_v1" field if the given value is not nil.
+func (ouo *OrderUpdateOne) SetNillableUnitsV1(d *decimal.Decimal) *OrderUpdateOne {
+	if d != nil {
+		ouo.SetUnitsV1(*d)
+	}
+	return ouo
+}
+
+// ClearUnitsV1 clears the value of the "units_v1" field.
+func (ouo *OrderUpdateOne) ClearUnitsV1() *OrderUpdateOne {
+	ouo.mutation.ClearUnitsV1()
 	return ouo
 }
 
@@ -1309,6 +1397,25 @@ func (ouo *OrderUpdateOne) sqlSave(ctx context.Context) (_node *Order, err error
 			Type:   field.TypeUint32,
 			Value:  value,
 			Column: order.FieldUnits,
+		})
+	}
+	if ouo.mutation.UnitsCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Column: order.FieldUnits,
+		})
+	}
+	if value, ok := ouo.mutation.UnitsV1(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Value:  value,
+			Column: order.FieldUnitsV1,
+		})
+	}
+	if ouo.mutation.UnitsV1Cleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeOther,
+			Column: order.FieldUnitsV1,
 		})
 	}
 	if value, ok := ouo.mutation.PromotionID(); ok {

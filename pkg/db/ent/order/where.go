@@ -6,6 +6,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/NpoolPlatform/order-manager/pkg/db/ent/predicate"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // ID filters vertices based on their ID field.
@@ -139,6 +140,13 @@ func PayWithParent(v bool) predicate.Order {
 func Units(v uint32) predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldUnits), v))
+	})
+}
+
+// UnitsV1 applies equality check predicate on the "units_v1" field. It's identical to UnitsV1EQ.
+func UnitsV1(v decimal.Decimal) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldUnitsV1), v))
 	})
 }
 
@@ -756,6 +764,98 @@ func UnitsLT(v uint32) predicate.Order {
 func UnitsLTE(v uint32) predicate.Order {
 	return predicate.Order(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldUnits), v))
+	})
+}
+
+// UnitsIsNil applies the IsNil predicate on the "units" field.
+func UnitsIsNil() predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldUnits)))
+	})
+}
+
+// UnitsNotNil applies the NotNil predicate on the "units" field.
+func UnitsNotNil() predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldUnits)))
+	})
+}
+
+// UnitsV1EQ applies the EQ predicate on the "units_v1" field.
+func UnitsV1EQ(v decimal.Decimal) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldUnitsV1), v))
+	})
+}
+
+// UnitsV1NEQ applies the NEQ predicate on the "units_v1" field.
+func UnitsV1NEQ(v decimal.Decimal) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldUnitsV1), v))
+	})
+}
+
+// UnitsV1In applies the In predicate on the "units_v1" field.
+func UnitsV1In(vs ...decimal.Decimal) predicate.Order {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldUnitsV1), v...))
+	})
+}
+
+// UnitsV1NotIn applies the NotIn predicate on the "units_v1" field.
+func UnitsV1NotIn(vs ...decimal.Decimal) predicate.Order {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldUnitsV1), v...))
+	})
+}
+
+// UnitsV1GT applies the GT predicate on the "units_v1" field.
+func UnitsV1GT(v decimal.Decimal) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldUnitsV1), v))
+	})
+}
+
+// UnitsV1GTE applies the GTE predicate on the "units_v1" field.
+func UnitsV1GTE(v decimal.Decimal) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldUnitsV1), v))
+	})
+}
+
+// UnitsV1LT applies the LT predicate on the "units_v1" field.
+func UnitsV1LT(v decimal.Decimal) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldUnitsV1), v))
+	})
+}
+
+// UnitsV1LTE applies the LTE predicate on the "units_v1" field.
+func UnitsV1LTE(v decimal.Decimal) predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldUnitsV1), v))
+	})
+}
+
+// UnitsV1IsNil applies the IsNil predicate on the "units_v1" field.
+func UnitsV1IsNil() predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldUnitsV1)))
+	})
+}
+
+// UnitsV1NotNil applies the NotNil predicate on the "units_v1" field.
+func UnitsV1NotNil() predicate.Order {
+	return predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldUnitsV1)))
 	})
 }
 

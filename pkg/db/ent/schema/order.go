@@ -2,9 +2,11 @@ package schema
 
 import (
 	"entgo.io/ent"
+	"entgo.io/ent/dialect"
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/message/npool/order/mgr/v1/order"
 	"github.com/NpoolPlatform/order-manager/pkg/db/mixin"
+	"github.com/shopspring/decimal"
 
 	"github.com/google/uuid"
 )
@@ -44,7 +46,16 @@ func (Order) Fields() []ent.Field {
 			Optional().
 			Default(false),
 		field.
-			Uint32("units"),
+			Uint32("units").
+			Optional().
+			Default(0),
+		field.
+			Other("units_v1", decimal.Decimal{}).
+			SchemaType(map[string]string{
+				dialect.MySQL: "decimal(37,18)",
+			}).
+			Optional().
+			Default(decimal.Decimal{}),
 		field.
 			UUID("promotion_id", uuid.UUID{}).
 			Optional().

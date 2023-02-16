@@ -23,7 +23,7 @@ func Ent2Grpc(row *ent.Order) *npool.Order {
 		UserID:                 row.UserID.String(),
 		ParentOrderID:          row.ParentOrderID.String(),
 		PayWithParent:          row.PayWithParent,
-		Units:                  row.Units,
+		Units:                  row.UnitsV1.String(),
 		PromotionID:            row.PromotionID.String(),
 		DiscountCouponID:       row.DiscountCouponID.String(),
 		UserSpecialReductionID: row.UserSpecialReductionID.String(),

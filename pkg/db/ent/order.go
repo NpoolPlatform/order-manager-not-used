@@ -10,6 +10,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/NpoolPlatform/order-manager/pkg/db/ent/order"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // Order is the model entity for the Order schema.
@@ -35,6 +36,8 @@ type Order struct {
 	PayWithParent bool `json:"pay_with_parent,omitempty"`
 	// Units holds the value of the "units" field.
 	Units uint32 `json:"units,omitempty"`
+	// UnitsV1 holds the value of the "units_v1" field.
+	UnitsV1 decimal.Decimal `json:"units_v1,omitempty"`
 	// PromotionID holds the value of the "promotion_id" field.
 	PromotionID uuid.UUID `json:"promotion_id,omitempty"`
 	// DiscountCouponID holds the value of the "discount_coupon_id" field.
@@ -64,6 +67,8 @@ func (*Order) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case order.FieldCouponIds:
 			values[i] = new([]byte)
+		case order.FieldUnitsV1:
+			values[i] = new(decimal.Decimal)
 		case order.FieldPayWithParent:
 			values[i] = new(sql.NullBool)
 		case order.FieldCreatedAt, order.FieldUpdatedAt, order.FieldDeletedAt, order.FieldUnits, order.FieldStartAt, order.FieldEndAt, order.FieldLastBenefitAt:
@@ -146,6 +151,12 @@ func (o *Order) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field units", values[i])
 			} else if value.Valid {
 				o.Units = uint32(value.Int64)
+			}
+		case order.FieldUnitsV1:
+			if value, ok := values[i].(*decimal.Decimal); !ok {
+				return fmt.Errorf("unexpected type %T for field units_v1", values[i])
+			} else if value != nil {
+				o.UnitsV1 = *value
 			}
 		case order.FieldPromotionID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
@@ -263,6 +274,9 @@ func (o *Order) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("units=")
 	builder.WriteString(fmt.Sprintf("%v", o.Units))
+	builder.WriteString(", ")
+	builder.WriteString("units_v1=")
+	builder.WriteString(fmt.Sprintf("%v", o.UnitsV1))
 	builder.WriteString(", ")
 	builder.WriteString("promotion_id=")
 	builder.WriteString(fmt.Sprintf("%v", o.PromotionID))

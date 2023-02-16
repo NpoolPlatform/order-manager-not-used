@@ -3,6 +3,8 @@ package order
 import (
 	"fmt"
 
+	"github.com/shopspring/decimal"
+
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
@@ -54,7 +56,12 @@ func validate(info *npool.OrderReq) error {
 		return status.Error(codes.InvalidArgument, fmt.Sprintf("ParentOrderID is invalid: %v", err))
 	}
 
-	if info.GetUnits() == 0 {
+	units, err := decimal.NewFromString(info.GetUnits())
+	if err != nil {
+		logger.Sugar().Errorw("validate", "Units", info.GetUnits(), "error", err)
+		return status.Error(codes.InvalidArgument, fmt.Sprintf("Units is invalid: %v", err))
+	}
+	if units.Cmp(decimal.NewFromInt(0)) <= 0 {
 		logger.Sugar().Errorw("validate", "Units", info.GetUnits())
 		return status.Error(codes.InvalidArgument, "Units is zero or empty")
 	}
