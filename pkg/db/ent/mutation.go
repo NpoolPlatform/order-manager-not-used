@@ -924,6 +924,7 @@ type OrderMutation struct {
 	pay_with_parent           *bool
 	units                     *uint32
 	addunits                  *int32
+	units_v1                  *decimal.Decimal
 	promotion_id              *uuid.UUID
 	discount_coupon_id        *uuid.UUID
 	user_special_reduction_id *uuid.UUID
@@ -1471,10 +1472,73 @@ func (m *OrderMutation) AddedUnits() (r int32, exists bool) {
 	return *v, true
 }
 
+// ClearUnits clears the value of the "units" field.
+func (m *OrderMutation) ClearUnits() {
+	m.units = nil
+	m.addunits = nil
+	m.clearedFields[order.FieldUnits] = struct{}{}
+}
+
+// UnitsCleared returns if the "units" field was cleared in this mutation.
+func (m *OrderMutation) UnitsCleared() bool {
+	_, ok := m.clearedFields[order.FieldUnits]
+	return ok
+}
+
 // ResetUnits resets all changes to the "units" field.
 func (m *OrderMutation) ResetUnits() {
 	m.units = nil
 	m.addunits = nil
+	delete(m.clearedFields, order.FieldUnits)
+}
+
+// SetUnitsV1 sets the "units_v1" field.
+func (m *OrderMutation) SetUnitsV1(d decimal.Decimal) {
+	m.units_v1 = &d
+}
+
+// UnitsV1 returns the value of the "units_v1" field in the mutation.
+func (m *OrderMutation) UnitsV1() (r decimal.Decimal, exists bool) {
+	v := m.units_v1
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUnitsV1 returns the old "units_v1" field's value of the Order entity.
+// If the Order object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OrderMutation) OldUnitsV1(ctx context.Context) (v decimal.Decimal, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUnitsV1 is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUnitsV1 requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUnitsV1: %w", err)
+	}
+	return oldValue.UnitsV1, nil
+}
+
+// ClearUnitsV1 clears the value of the "units_v1" field.
+func (m *OrderMutation) ClearUnitsV1() {
+	m.units_v1 = nil
+	m.clearedFields[order.FieldUnitsV1] = struct{}{}
+}
+
+// UnitsV1Cleared returns if the "units_v1" field was cleared in this mutation.
+func (m *OrderMutation) UnitsV1Cleared() bool {
+	_, ok := m.clearedFields[order.FieldUnitsV1]
+	return ok
+}
+
+// ResetUnitsV1 resets all changes to the "units_v1" field.
+func (m *OrderMutation) ResetUnitsV1() {
+	m.units_v1 = nil
+	delete(m.clearedFields, order.FieldUnitsV1)
 }
 
 // SetPromotionID sets the "promotion_id" field.
@@ -2049,7 +2113,7 @@ func (m *OrderMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *OrderMutation) Fields() []string {
-	fields := make([]string, 0, 19)
+	fields := make([]string, 0, 20)
 	if m.created_at != nil {
 		fields = append(fields, order.FieldCreatedAt)
 	}
@@ -2076,6 +2140,9 @@ func (m *OrderMutation) Fields() []string {
 	}
 	if m.units != nil {
 		fields = append(fields, order.FieldUnits)
+	}
+	if m.units_v1 != nil {
+		fields = append(fields, order.FieldUnitsV1)
 	}
 	if m.promotion_id != nil {
 		fields = append(fields, order.FieldPromotionID)
@@ -2133,6 +2200,8 @@ func (m *OrderMutation) Field(name string) (ent.Value, bool) {
 		return m.PayWithParent()
 	case order.FieldUnits:
 		return m.Units()
+	case order.FieldUnitsV1:
+		return m.UnitsV1()
 	case order.FieldPromotionID:
 		return m.PromotionID()
 	case order.FieldDiscountCouponID:
@@ -2180,6 +2249,8 @@ func (m *OrderMutation) OldField(ctx context.Context, name string) (ent.Value, e
 		return m.OldPayWithParent(ctx)
 	case order.FieldUnits:
 		return m.OldUnits(ctx)
+	case order.FieldUnitsV1:
+		return m.OldUnitsV1(ctx)
 	case order.FieldPromotionID:
 		return m.OldPromotionID(ctx)
 	case order.FieldDiscountCouponID:
@@ -2271,6 +2342,13 @@ func (m *OrderMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetUnits(v)
+		return nil
+	case order.FieldUnitsV1:
+		v, ok := value.(decimal.Decimal)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUnitsV1(v)
 		return nil
 	case order.FieldPromotionID:
 		v, ok := value.(uuid.UUID)
@@ -2465,6 +2543,12 @@ func (m *OrderMutation) ClearedFields() []string {
 	if m.FieldCleared(order.FieldPayWithParent) {
 		fields = append(fields, order.FieldPayWithParent)
 	}
+	if m.FieldCleared(order.FieldUnits) {
+		fields = append(fields, order.FieldUnits)
+	}
+	if m.FieldCleared(order.FieldUnitsV1) {
+		fields = append(fields, order.FieldUnitsV1)
+	}
 	if m.FieldCleared(order.FieldPromotionID) {
 		fields = append(fields, order.FieldPromotionID)
 	}
@@ -2514,6 +2598,12 @@ func (m *OrderMutation) ClearField(name string) error {
 		return nil
 	case order.FieldPayWithParent:
 		m.ClearPayWithParent()
+		return nil
+	case order.FieldUnits:
+		m.ClearUnits()
+		return nil
+	case order.FieldUnitsV1:
+		m.ClearUnitsV1()
 		return nil
 	case order.FieldPromotionID:
 		m.ClearPromotionID()
@@ -2579,6 +2669,9 @@ func (m *OrderMutation) ResetField(name string) error {
 		return nil
 	case order.FieldUnits:
 		m.ResetUnits()
+		return nil
+	case order.FieldUnitsV1:
+		m.ResetUnitsV1()
 		return nil
 	case order.FieldPromotionID:
 		m.ResetPromotionID()

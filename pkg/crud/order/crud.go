@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/shopspring/decimal"
+
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqljson"
 
@@ -45,7 +47,11 @@ func CreateSet(c *ent.OrderCreate, in *npool.OrderReq) (*ent.OrderCreate, error)
 		c.SetPayWithParent(in.GetPayWithParent())
 	}
 	if in.Units != nil {
-		c.SetUnits(in.GetUnits())
+		units, err := decimal.NewFromString(in.GetUnits())
+		if err != nil {
+			return nil, err
+		}
+		c.SetUnitsV1(units)
 	}
 	if in.PromotionID != nil {
 		c.SetPromotionID(uuid.MustParse(in.GetPromotionID()))

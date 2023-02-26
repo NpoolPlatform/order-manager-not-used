@@ -5,6 +5,7 @@ package order
 import (
 	"entgo.io/ent"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 const (
@@ -30,6 +31,8 @@ const (
 	FieldPayWithParent = "pay_with_parent"
 	// FieldUnits holds the string denoting the units field in the database.
 	FieldUnits = "units"
+	// FieldUnitsV1 holds the string denoting the units_v1 field in the database.
+	FieldUnitsV1 = "units_v1"
 	// FieldPromotionID holds the string denoting the promotion_id field in the database.
 	FieldPromotionID = "promotion_id"
 	// FieldDiscountCouponID holds the string denoting the discount_coupon_id field in the database.
@@ -66,6 +69,7 @@ var Columns = []string{
 	FieldParentOrderID,
 	FieldPayWithParent,
 	FieldUnits,
+	FieldUnitsV1,
 	FieldPromotionID,
 	FieldDiscountCouponID,
 	FieldUserSpecialReductionID,
@@ -109,6 +113,10 @@ var (
 	DefaultParentOrderID func() uuid.UUID
 	// DefaultPayWithParent holds the default value on creation for the "pay_with_parent" field.
 	DefaultPayWithParent bool
+	// DefaultUnits holds the default value on creation for the "units" field.
+	DefaultUnits uint32
+	// DefaultUnitsV1 holds the default value on creation for the "units_v1" field.
+	DefaultUnitsV1 decimal.Decimal
 	// DefaultPromotionID holds the default value on creation for the "promotion_id" field.
 	DefaultPromotionID func() uuid.UUID
 	// DefaultDiscountCouponID holds the default value on creation for the "discount_coupon_id" field.

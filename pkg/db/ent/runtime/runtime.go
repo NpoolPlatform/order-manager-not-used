@@ -101,44 +101,52 @@ func init() {
 	orderDescPayWithParent := orderFields[5].Descriptor()
 	// order.DefaultPayWithParent holds the default value on creation for the pay_with_parent field.
 	order.DefaultPayWithParent = orderDescPayWithParent.Default.(bool)
+	// orderDescUnits is the schema descriptor for units field.
+	orderDescUnits := orderFields[6].Descriptor()
+	// order.DefaultUnits holds the default value on creation for the units field.
+	order.DefaultUnits = orderDescUnits.Default.(uint32)
+	// orderDescUnitsV1 is the schema descriptor for units_v1 field.
+	orderDescUnitsV1 := orderFields[7].Descriptor()
+	// order.DefaultUnitsV1 holds the default value on creation for the units_v1 field.
+	order.DefaultUnitsV1 = orderDescUnitsV1.Default.(decimal.Decimal)
 	// orderDescPromotionID is the schema descriptor for promotion_id field.
-	orderDescPromotionID := orderFields[7].Descriptor()
+	orderDescPromotionID := orderFields[8].Descriptor()
 	// order.DefaultPromotionID holds the default value on creation for the promotion_id field.
 	order.DefaultPromotionID = orderDescPromotionID.Default.(func() uuid.UUID)
 	// orderDescDiscountCouponID is the schema descriptor for discount_coupon_id field.
-	orderDescDiscountCouponID := orderFields[8].Descriptor()
+	orderDescDiscountCouponID := orderFields[9].Descriptor()
 	// order.DefaultDiscountCouponID holds the default value on creation for the discount_coupon_id field.
 	order.DefaultDiscountCouponID = orderDescDiscountCouponID.Default.(func() uuid.UUID)
 	// orderDescUserSpecialReductionID is the schema descriptor for user_special_reduction_id field.
-	orderDescUserSpecialReductionID := orderFields[9].Descriptor()
+	orderDescUserSpecialReductionID := orderFields[10].Descriptor()
 	// order.DefaultUserSpecialReductionID holds the default value on creation for the user_special_reduction_id field.
 	order.DefaultUserSpecialReductionID = orderDescUserSpecialReductionID.Default.(func() uuid.UUID)
 	// orderDescStartAt is the schema descriptor for start_at field.
-	orderDescStartAt := orderFields[10].Descriptor()
+	orderDescStartAt := orderFields[11].Descriptor()
 	// order.DefaultStartAt holds the default value on creation for the start_at field.
 	order.DefaultStartAt = orderDescStartAt.Default.(uint32)
 	// orderDescEndAt is the schema descriptor for end_at field.
-	orderDescEndAt := orderFields[11].Descriptor()
+	orderDescEndAt := orderFields[12].Descriptor()
 	// order.DefaultEndAt holds the default value on creation for the end_at field.
 	order.DefaultEndAt = orderDescEndAt.Default.(uint32)
 	// orderDescFixAmountCouponID is the schema descriptor for fix_amount_coupon_id field.
-	orderDescFixAmountCouponID := orderFields[12].Descriptor()
+	orderDescFixAmountCouponID := orderFields[13].Descriptor()
 	// order.DefaultFixAmountCouponID holds the default value on creation for the fix_amount_coupon_id field.
 	order.DefaultFixAmountCouponID = orderDescFixAmountCouponID.Default.(func() uuid.UUID)
 	// orderDescType is the schema descriptor for type field.
-	orderDescType := orderFields[13].Descriptor()
+	orderDescType := orderFields[14].Descriptor()
 	// order.DefaultType holds the default value on creation for the type field.
 	order.DefaultType = orderDescType.Default.(string)
 	// orderDescState is the schema descriptor for state field.
-	orderDescState := orderFields[14].Descriptor()
+	orderDescState := orderFields[15].Descriptor()
 	// order.DefaultState holds the default value on creation for the state field.
 	order.DefaultState = orderDescState.Default.(string)
 	// orderDescCouponIds is the schema descriptor for coupon_ids field.
-	orderDescCouponIds := orderFields[15].Descriptor()
+	orderDescCouponIds := orderFields[16].Descriptor()
 	// order.DefaultCouponIds holds the default value on creation for the coupon_ids field.
 	order.DefaultCouponIds = orderDescCouponIds.Default.(func() []uuid.UUID)
 	// orderDescLastBenefitAt is the schema descriptor for last_benefit_at field.
-	orderDescLastBenefitAt := orderFields[16].Descriptor()
+	orderDescLastBenefitAt := orderFields[17].Descriptor()
 	// order.DefaultLastBenefitAt holds the default value on creation for the last_benefit_at field.
 	order.DefaultLastBenefitAt = orderDescLastBenefitAt.Default.(uint32)
 	// orderDescID is the schema descriptor for id field.

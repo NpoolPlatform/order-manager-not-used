@@ -7,6 +7,8 @@ import (
 	"strconv"
 	"testing"
 
+	"github.com/shopspring/decimal"
+
 	"google.golang.org/grpc/credentials/insecure"
 
 	"github.com/NpoolPlatform/go-service-framework/pkg/config"
@@ -42,7 +44,7 @@ var appDate = npool.Order{
 	UserID:                 uuid.NewString(),
 	ParentOrderID:          uuid.NewString(),
 	PayWithParent:          true,
-	Units:                  1001,
+	Units:                  decimal.NewFromInt(1001).String(),
 	PromotionID:            uuid.NewString(),
 	DiscountCouponID:       uuid.NewString(),
 	UserSpecialReductionID: uuid.NewString(),
@@ -94,7 +96,7 @@ func createOrders(t *testing.T) {
 			UserID:                 uuid.NewString(),
 			ParentOrderID:          uuid.NewString(),
 			PayWithParent:          true,
-			Units:                  1001,
+			Units:                  decimal.NewFromInt(1001).String(),
 			PromotionID:            uuid.NewString(),
 			DiscountCouponID:       uuid.NewString(),
 			UserSpecialReductionID: uuid.NewString(),
@@ -111,7 +113,7 @@ func createOrders(t *testing.T) {
 			UserID:                 uuid.NewString(),
 			ParentOrderID:          uuid.NewString(),
 			PayWithParent:          true,
-			Units:                  1001,
+			Units:                  decimal.NewFromInt(1001).String(),
 			PromotionID:            uuid.NewString(),
 			DiscountCouponID:       uuid.NewString(),
 			UserSpecialReductionID: uuid.NewString(),
