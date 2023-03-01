@@ -294,7 +294,7 @@ func SetQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.OrderQuery, error)
 		case cruder.EQ:
 			stm.Where(order.Type(npool.OrderType(conds.GetType().GetValue()).String()))
 		default:
-			return nil, fmt.Errorf("invalid payment field")
+			return nil, fmt.Errorf("invalid order field")
 		}
 	}
 	if conds.State != nil {
@@ -302,7 +302,19 @@ func SetQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.OrderQuery, error)
 		case cruder.EQ:
 			stm.Where(order.State(npool.OrderState(conds.GetState().GetValue()).String()))
 		default:
-			return nil, fmt.Errorf("invalid payment field")
+			return nil, fmt.Errorf("invalid order field")
+		}
+	}
+	if len(conds.GetStates().GetValue()) > 0 {
+		states := []string{}
+		for _, st := range conds.GetStates().GetValue() {
+			states = append(states, npool.OrderState(st).String())
+		}
+		switch conds.GetStates().GetOp() {
+		case cruder.IN:
+			stm.Where(order.StateIn(states...))
+		default:
+			return nil, fmt.Errorf("invalid order field")
 		}
 	}
 	if conds.FixAmountCouponID != nil {
@@ -310,7 +322,7 @@ func SetQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.OrderQuery, error)
 		case cruder.EQ:
 			stm.Where(order.FixAmountCouponID(uuid.MustParse(conds.GetFixAmountCouponID().GetValue())))
 		default:
-			return nil, fmt.Errorf("invalid payment field")
+			return nil, fmt.Errorf("invalid order field")
 		}
 	}
 	if conds.DiscountCouponID != nil {
@@ -318,7 +330,7 @@ func SetQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.OrderQuery, error)
 		case cruder.EQ:
 			stm.Where(order.DiscountCouponID(uuid.MustParse(conds.GetDiscountCouponID().GetValue())))
 		default:
-			return nil, fmt.Errorf("invalid payment field")
+			return nil, fmt.Errorf("invalid order field")
 		}
 	}
 	if conds.UserSpecialReductionID != nil {
@@ -326,7 +338,7 @@ func SetQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.OrderQuery, error)
 		case cruder.EQ:
 			stm.Where(order.UserSpecialReductionID(uuid.MustParse(conds.GetUserSpecialReductionID().GetValue())))
 		default:
-			return nil, fmt.Errorf("invalid payment field")
+			return nil, fmt.Errorf("invalid order field")
 		}
 	}
 	if conds.LastBenefitAt != nil {
@@ -334,7 +346,7 @@ func SetQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.OrderQuery, error)
 		case cruder.EQ:
 			stm.Where(order.LastBenefitAt(conds.GetLastBenefitAt().GetValue()))
 		default:
-			return nil, fmt.Errorf("invalid payment field")
+			return nil, fmt.Errorf("invalid order field")
 		}
 	}
 	if conds.CouponID != nil {
@@ -344,7 +356,7 @@ func SetQueryConds(conds *npool.Conds, cli *ent.Client) (*ent.OrderQuery, error)
 				selector.Where(sqljson.ValueContains(order.FieldCouponIds, conds.GetCouponID().GetValue()))
 			})
 		default:
-			return nil, fmt.Errorf("invalid payment field")
+			return nil, fmt.Errorf("invalid order field")
 		}
 	}
 	if len(conds.GetCouponIDs().GetValue()) > 0 {
