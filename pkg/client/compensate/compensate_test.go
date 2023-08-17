@@ -170,6 +170,7 @@ func deleteCompensate(t *testing.T) {
 	info, err := DeleteCompensate(context.Background(), info.ID)
 	if assert.Nil(t, err) {
 		appDate.DeletedAt = info.DeletedAt
+		appDate.UpdatedAt = info.UpdatedAt
 		assert.Equal(t, info, &appDate)
 	}
 }
